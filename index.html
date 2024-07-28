@@ -1672,7 +1672,8 @@
             onlyOpenNow = document.getElementById("filterOpenNow").checked;
             onlyFree = document.getElementById("filterFree").checked;
             boroughChooser = document.getElementById("boroughChooser").children;
-            searchTerms = document.getElementById("search_input").value.trim().split(" ");
+            searchTerms = document.getElementById("search_input").value.toLowerCase().trim().split(" ");
+
 
             // for checkbox
             // let chosenBoroughs = [];
