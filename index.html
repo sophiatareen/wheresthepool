@@ -7,10 +7,12 @@
     <title>where's the POOL? nyc</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&family=Space+Grotesk:wght@300..700&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
- <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&family=Space+Grotesk:wght@300..700&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+        rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
 
     <style>
         html,
@@ -180,14 +182,23 @@
 </head>
 
 <body>
+
     <div class="all_content h-100">
         <nav class="navbar py-3 pb-0">
             <div class="container-fluid justify-content-center">
                 <span class="navbar-brand" style="font-weight:500; cursor: help"><img class="logo"
-                        src="images/wtp-logo-1.png" /img>
+                        src="images/wtp-logo-1.png"></span>
+                        <span class="mx-2" data-bs-trigger="hover focus" data-bs-toggle="popover" data-bs-placement="left" title="Popover title"
+                        data-bs-content="And here's some amazing content. It's very engaging. Right?">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-info-circle"
+                            viewBox="0 0 16 16">
+                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                            <path
+                                d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0" />
+                        </svg>
+                    </span>
             </div>
         </nav>
-
         <div class="header_content container my-2 px-3">
             <div class="row mx-1 mx-md-0">
                 <div class="col-3 d-sm-none"></div>
@@ -233,8 +244,8 @@
                 <input id="search" autofocus="autofocus" type="text" class="form-control" oninput="refreshFilters()"
                     placeholder="Search" value="">
             </div>
-            <div id='card-container' class="my-3 my-lg-2">
-               <!-- Sample card for reference 
+            <div id='card-container' class="my-3">
+               <!-- Sample card for reference
                 <div class="card text-bg-light mb-3">
                 <div class="card-body">
                     <h5 class="card-title">SAMPLE Pool <span class="badge text-bg-success">OPEN</span></h5>
@@ -273,6 +284,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
         crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" crossorigin="anonymous"></script>
     <script>
         // TODO decide if we want a maps link?
 
@@ -1990,6 +2002,14 @@
         // we replace ~50 DOM elements (OPEN/CLOSED badges) every time
         // idk what's an appropriate amount performance-wise
         setInterval(refreshWithCurrentTime, 1000 * 60)
+
+
+        // enable popovers
+        var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+        var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+            return new bootstrap.Popover(popoverTriggerEl)
+        })
+
     </script>
 </body>
 
