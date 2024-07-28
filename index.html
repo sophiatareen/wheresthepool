@@ -1,0 +1,1950 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>wheresthepool.com</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <style>
+        html,
+        body {
+            height: 100%;
+        }
+
+        .all_content {
+            /* padding-bottom: 10px; */
+            max-width: 1000px;
+            margin: auto;
+            overflow-y: scroll;
+            border-radius: 2px;
+            background: linear-gradient(rgba(255, 255, 249, 1), rgba(255, 255, 249, 0.9), rgba(255, 255, 249, 0.5), rgba(255, 255, 249, 0)), url('pool_image.jpg');
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
+            background-position: right bottom;
+        }
+
+        body {
+            background-color: rgb(255, 255, 249);
+        }
+
+        [class*="subway-icon"] {
+            position: relative;
+            font-size: 0.75em;
+            z-index: 5;
+            height: 1em;
+            width: 1em;
+            line-height: 1em;
+            margin-left: 0.2em;
+            margin-right: 0.2em;
+            justify-content: center;
+            align-items: center;
+            display: inline-flex;
+            text-align: center;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: #000;
+        }
+
+        [class*="subway-icon"]::before {
+            content: "";
+            position: absolute;
+            z-index: -1;
+            width: calc(100% + 0.4em);
+            height: calc(100% + 0.4em);
+            left: -0.2em;
+            top: -0.2em;
+            border-radius: 50%;
+            background-color: red;
+        }
+
+        [class*="subway-icon"].express {
+            margin-left: 0.2666666667em;
+            margin-right: 0.2666666667em;
+        }
+
+        [class*="subway-icon"].express::before {
+            transform: rotate(45deg);
+            border-radius: 0;
+            width: calc(100% + 0.1em);
+            height: calc(100% + 0.1em);
+            left: -0.05em;
+            top: -0.05em;
+        }
+
+        .mta-red {
+            color: #fff;
+        }
+
+        .mta-red::before {
+            background-color: #df0000;
+        }
+
+        .mta-green {
+            color: #fff;
+        }
+
+        .mta-green::before {
+            background-color: #008700;
+        }
+
+        .mta-blue {
+            color: #fff;
+        }
+
+        .mta-blue::before {
+            background-color: #0a5786;
+        }
+
+        .mta-orange {
+            color: #fff;
+        }
+
+        .mta-orange::before {
+            background-color: #de3700;
+        }
+
+        .mta-purple {
+            color: #fff;
+        }
+
+        .mta-purple::before {
+            background-color: #5a045a;
+        }
+
+        .mta-green-2 {
+            color: #fff;
+        }
+
+        .mta-green-2::before {
+            background-color: #4f8403;
+        }
+
+        .mta-yellow {
+            color: #000;
+        }
+
+        .mta-yellow::before {
+            background-color: #FCCC0A;
+        }
+
+        .mta-gray {
+            color: #fff;
+        }
+
+        .mta-gray::before {
+            background-color: #666;
+        }
+
+        .mta-brown {
+            color: #fff;
+        }
+
+        .mta-brown::before {
+            background-color: #573208;
+        }
+
+        .mta-sir {
+            color: #fff;
+        }
+
+        .mta-sir::before {
+            color: #0078C6;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="all_content h-100">
+
+        <nav class="navbar py-3 pb-0">
+            <div class="container-fluid justify-content-center">
+                <span class="navbar-brand" style="font-weight:500; cursor: help">where's the pool? NYC</span>
+            </div>
+        </nav>
+        <hr />
+
+        <div class="header_content container my-2 px-3">
+            <div class="row mx-1 mx-sm-0">
+                <div class="col-3 d-sm-none"></div>
+                <div class="col-7 col-sm-5 col-md-4 my-2 my-sm-1">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="filterOpenNow">
+                        <label class="form-check-label" for="filterOpenNow">Open now</label>
+                    </div>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="filterFree">
+                        <label class="form-check-label" for="filterFree">Free pools only</label>
+                    </div>
+                </div>
+                <div class="col-1 d-sm-none"></div>
+
+                <div class="col d-flex justify-content-center justify-content-md-end text-center my-2 my-sm-0 my-lg-2">
+                    <div id="boroughChooser" class="btn-group-sm my-lg-1" role="group" aria-label="choose a borough">
+                        <input type="radio" name="borough" class="btn-check " id="borough_all" autocomplete="off"
+                            checked>
+                        <label class="btn btn-outline " for="borough_all">All boroughs</label>
+
+                        <input type="radio" name="borough" class="btn-check" id="borough_bronx" autocomplete="off">
+                        <label class="btn btn-outline" for="borough_bronx">Bronx</label>
+
+                        <input type="radio" name="borough" class="btn-check" id="borough_brooklyn" autocomplete="off">
+                        <label class="btn btn-outline" for="borough_brooklyn">Brooklyn</label>
+
+                        <div class="d-lg-none"></div>
+
+                        <input type="radio" name="borough" class="btn-check" id="borough_manhattan" autocomplete="off">
+                        <label class="btn btn-outline" for="borough_manhattan">Manhattan</label>
+
+                        <input type="radio" name="borough" class="btn-check" id="borough_queens" autocomplete="off">
+                        <label class="btn btn-outline" for="borough_queens">Queens</label>
+
+                        <input type="radio" name="borough" class="btn-check" id="borough_staten" autocomplete="off">
+                        <label class="btn btn-outline" for="borough_staten">Staten Island</label>
+                    </div>
+                </div>
+            </div>
+            <!-- 
+        TODO decide if we want a maps link?
+
+        TODO validate the data on the airtable: st john's pool has typo; "closet subway"; 
+        
+        TODO make sure the "real time open badge" works, it probably won't work if your computer is in another time zone
+        To get the data from the exported airtable, use   
+        python -c 'import csv, json, sys; inp = open("data.csv", "r", encoding="utf-8-sig"); f = open("data.json", "x"); f.write(json.dumps([dict(r) for r in csv.DictReader(inp)])); inp.close(); f.close();'     
+        
+        -->
+
+            <div id='card-container' class="my-3 my-lg-2">
+                <!-- Sample card for reference -->
+                <!-- <div class="card text-bg-light mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">SAMPLE Pool <span class="badge text-bg-success">OPEN</span></h5>
+                    <div class="card-text container text-left">
+                        <div class="row">
+                            <div class="col-12 col-md-4 pb-1">
+                                <div><b>Location</b></div>
+                                <div>Crotona Park East</div>
+                                <div>173rd Street and Fulton Avenue</div>
+                                <div>Subway: <span class="subway-icon mta-red">2</span> <span
+                                        class="subway-icon mta-green">5</span></div>
+                            </div>
+                            <div class="col-12 col-md-4 pb-1">
+                                <div><b>Type</b></div>
+                                <div>Outdoor Pool</div>
+                                <div>Olympic Size</div>
+                                <div>Free for everyone</div>
+                                <div><a
+                                        href="https://www.nycgovparks.org/parks/crotona-park/facilities/outdoor-pools/crotona-pool">Website</a>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-4 pb-1">
+                                <div><b>Hours</b></div>
+                                <div>Weekdays: 11am-7pm</div>
+                                <div>Saturday: 11am-7pm</div>
+                                <div>Sunday: 11am-7pm</div>
+                                <div>Cleaning: 3pm-4pm</div>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+            </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+    <script>
+        pooldata = [
+            {
+                "Pool": "Haffen Pool",
+                "Is Open?": "OPEN",
+                "Borough": "Brooklyn",
+                "Neighborhood": "Baychester",
+                "Cost": "Free for all",
+                "Pool Type": "Wading Pool,Intermediate",
+                "Outdoor or Indoor": "Outdoor",
+                "Closest subways": "2",
+                "Address": "Ely and Burke Avenues",
+                "Weekday Open Time": "11:00",
+                "Weekday Close Time": "19:00",
+                "Cleaning Start Time": "15:00",
+                "Cleaning End Time": "16:00",
+                "Saturday Open Time": "11:00",
+                "Saturday Close Time": "19:00",
+                "Sunday Open Time": "11:00",
+                "Sunday Close Time": "19:00",
+                "Availability": "Public",
+                "Source info": "https://www.nycgovparks.org/parks/haffen-park/facilities/outdoor-pools/haffen-pool",
+            },
+            {
+                "Pool": "Kosciuszko Pool",
+                "Is Open?": "OPEN",
+                "Borough": "Brooklyn",
+                "Neighborhood": "BedStuy",
+                "Cost": "Free for all",
+                "Pool Type": "Wading Pool,Olympic Size",
+                "Outdoor or Indoor": "Outdoor",
+                "Closest subways": "J",
+                "Address": "Marcy Avenue between DeKalb Avenue & Kosciuszko Street",
+                "Weekday Open Time": "11:00",
+                "Weekday Close Time": "19:00",
+                "Cleaning Start Time": "15:00",
+                "Cleaning End Time": "16:00",
+                "Saturday Open Time": "11:00",
+                "Saturday Close Time": "19:00",
+                "Sunday Open Time": "11:00",
+                "Sunday Close Time": "19:00",
+                "Availability": "Public",
+                "Source info": "https://www.nycgovparks.org/parks/kosciuszko-pool/facilities/outdoor-pools/kosciuszko-pool",
+            },
+            {
+                "Pool": "Jesse Owens Pool",
+                "Is Open?": "OPEN",
+                "Borough": "Brooklyn",
+                "Neighborhood": "BedStuy",
+                "Cost": "Free for all",
+                "Pool Type": "Mini Pool",
+                "Outdoor or Indoor": "Outdoor",
+                "Closest subways": "J",
+                "Address": "117 Stuyvesant Avenue",
+                "Weekday Open Time": "11:00",
+                "Weekday Close Time": "19:00",
+                "Cleaning Start Time": "15:00",
+                "Cleaning End Time": "16:00",
+                "Saturday Open Time": "11:00",
+                "Saturday Close Time": "19:00",
+                "Sunday Open Time": "11:00",
+                "Sunday Close Time": "19:00",
+                "Availability": "Public",
+                "Source info": "https://www.nycgovparks.org/parks/jesse-owens-playground/facilities/outdoor-pools/jesse-owens-pool",
+            },
+            {
+                "Pool": "Betsy Head Pool",
+                "Is Open?": "OPEN",
+                "Borough": "Brooklyn",
+                "Neighborhood": "Brownsville",
+                "Cost": "Free for all",
+                "Pool Type": "Olympic Size",
+                "Outdoor or Indoor": "Outdoor",
+                "Closest subways": "L",
+                "Address": "Boyland, Livonia and Dumont Avenues",
+                "Weekday Open Time": "11:00",
+                "Weekday Close Time": "19:00",
+                "Cleaning Start Time": "15:00",
+                "Cleaning End Time": "16:00",
+                "Saturday Open Time": "11:00",
+                "Saturday Close Time": "19:00",
+                "Sunday Open Time": "11:00",
+                "Sunday Close Time": "19:00",
+                "Availability": "Public",
+                "Source info": "https://www.nycgovparks.org/parks/betsy-head-memorial-playground/facilities/outdoor-pools/betsy-head-pool",
+            },
+            {
+                "Pool": "Howard Pool",
+                "Is Open?": "OPEN",
+                "Borough": "Brooklyn",
+                "Neighborhood": "Brownsville",
+                "Cost": "Free for all",
+                "Pool Type": "Wading Pool,Intermediate",
+                "Outdoor or Indoor": "Outdoor",
+                "Closest subways": "3",
+                "Address": "Glenmore and Mother Gaston Blvd., East New York Avenue",
+                "Weekday Open Time": "11:00",
+                "Weekday Close Time": "19:00",
+                "Cleaning Start Time": "15:00",
+                "Cleaning End Time": "16:00",
+                "Saturday Open Time": "11:00",
+                "Saturday Close Time": "19:00",
+                "Sunday Open Time": "11:00",
+                "Sunday Close Time": "19:00",
+                "Availability": "Public",
+                "Source info": "https://www.nycgovparks.org/parks/howard-playground/facilities/outdoor-pools/howard-pool",
+            },
+            {
+                "Pool": "Brownsville Pool",
+                "Is Open?": "CLOSED",
+                "Borough": "Brooklyn",
+                "Neighborhood": "Brownsville",
+                "Cost": "$150 for adults / year,$25 for seniors / year,$25 for young adults (18-24) / year,Free for people under 18 ",
+                "Pool Type": "Intermediate",
+                "Outdoor or Indoor": "Indoor",
+                "Closest subways": "3",
+                "Address": "Linden and Mother Gaston Blvds. and Christopher Avenue",
+                "Weekday Open Time": "Closed for construction",
+                "Weekday Close Time": "Closed for construction",
+                "Cleaning Start Time": "Closed for construction",
+                "Cleaning End Time": "Closed for construction",
+                "Saturday Open Time": "Closed for construction",
+                "Saturday Close Time": "Closed for construction",
+                "Sunday Open Time": "Closed for construction",
+                "Sunday Close Time": "Closed for construction",
+                "Availability": "Recreation Center membership required",
+                "Source info": "https://www.nycgovparks.org/parks/brownsville-playground/facilities/indoor-pools/brownsville-pool",
+            },
+            {
+                "Pool": "Bushwick Pool",
+                "Is Open?": "OPEN",
+                "Borough": "Brooklyn",
+                "Neighborhood": "Bushwick",
+                "Cost": "Free for all",
+                "Pool Type": "Intermediate,Wading Pool",
+                "Outdoor or Indoor": "Outdoor",
+                "Closest subways": "L,M",
+                "Address": "Humboldt Street, Flushing & Bushwick Avenues",
+                "Weekday Open Time": "11:00",
+                "Weekday Close Time": "19:00",
+                "Cleaning Start Time": "15:00",
+                "Cleaning End Time": "16:00",
+                "Saturday Open Time": "11:00",
+                "Saturday Close Time": "19:00",
+                "Sunday Open Time": "11:00",
+                "Sunday Close Time": "19:00",
+                "Availability": "Public",
+                "Source info": "https://www.nycgovparks.org/parks/bushwick-playground-and-pool/facilities/outdoor-pools/bushwick-pool",
+            },
+            {
+                "Pool": "Claremont Pool",
+                "Is Open?": "OPEN",
+                "Borough": "Brooklyn",
+                "Neighborhood": "Claremont",
+                "Cost": "Free for all",
+                "Pool Type": "Intermediate,Wading Pool",
+                "Outdoor or Indoor": "Outdoor",
+                "Closest subways": "B,D",
+                "Address": "170th Street and Clay Avenue",
+                "Weekday Open Time": "11:00",
+                "Weekday Close Time": "19:00",
+                "Cleaning Start Time": "15:00",
+                "Cleaning End Time": "16:00",
+                "Saturday Open Time": "11:00",
+                "Saturday Close Time": "19:00",
+                "Sunday Open Time": "11:00",
+                "Sunday Close Time": "19:00",
+                "Availability": "Public",
+                "Source info": "https://www.nycgovparks.org/parks/claremont-park/facilities/outdoor-pools/claremont-pool",
+            },
+            {
+                "Pool": "St. John's Pool",
+                "Is Open?": "OPEN",
+                "Borough": "Brooklyn",
+                "Neighborhood": "Crown Heights",
+                "Cost": "$150 for adults / year,$25 for seniors / year,$25 for young adults (18-24) / year,Free for people under 18 ",
+                "Pool Type": "Intermediate",
+                "Outdoor or Indoor": "Indoor",
+                "Closest subways": "3,4",
+                "Address": "Prospect Place, between Troy and Schenectady Avenues",
+                "Weekday Open Time": "11:00",
+                "Weekday Close Time": "18:45",
+                "Cleaning Start Time": "n/a",
+                "Cleaning End Time": "n/a",
+                "Saturday Open Time": "8:00",
+                "Saturday Close Time": "15:45",
+                "Sunday Open Time": "Closed",
+                "Sunday Close Time": "Closed",
+                "Availability": "Recreation Center membership required",
+                "Source info": "https://www.nycgovparks.org/parks/st-johns-recreation-center/facilities/indoor-pools/st-johns-pool",
+            },
+            {
+                "Pool": "Commodore Barry Pool",
+                "Is Open?": "OPEN",
+                "Borough": "Brooklyn",
+                "Neighborhood": "Downtown Brooklyn",
+                "Cost": "Free for all",
+                "Pool Type": "Intermediate,Wading Pool",
+                "Outdoor or Indoor": "Outdoor",
+                "Closest subways": "F,B,D,N,Q,R",
+                "Address": "Flushing and Park Avenues, Navy and North Elliot Streets",
+                "Weekday Open Time": "11:00",
+                "Weekday Close Time": "19:00",
+                "Cleaning Start Time": "15:00",
+                "Cleaning End Time": "16:00",
+                "Saturday Open Time": "11:00",
+                "Saturday Close Time": "19:00",
+                "Sunday Open Time": "11:00",
+                "Sunday Close Time": "19:00",
+                "Availability": "Public",
+                "Source info": "https://www.nycgovparks.org/parks/commodore-barry-park/facilities/outdoor-pools/commodore-barry-pool",
+            },
+            {
+                "Pool": "David Fox/PS 251 Pool",
+                "Is Open?": "OPEN",
+                "Borough": "Brooklyn",
+                "Neighborhood": "Flatlands",
+                "Cost": "Free for all",
+                "Pool Type": "Mini Pool,Olympic Size",
+                "Outdoor or Indoor": "Outdoor",
+                "Closest subways": "2,5",
+                "Address": "E. 54th Street & Avenue H",
+                "Weekday Open Time": "11:00",
+                "Weekday Close Time": "19:00",
+                "Cleaning Start Time": "15:00",
+                "Cleaning End Time": "16:00",
+                "Saturday Open Time": "11:00",
+                "Saturday Close Time": "19:00",
+                "Sunday Open Time": "11:00",
+                "Sunday Close Time": "19:00",
+                "Availability": "Public",
+                "Source info": "https://www.nycgovparks.org/parks/fox-playground_brooklyn/facilities/outdoor-pools/david-foxps-251-pool",
+            },
+            {
+                "Pool": "Glenwood Houses Pool",
+                "Is Open?": "OPEN",
+                "Borough": "Brooklyn",
+                "Neighborhood": "Flatlands",
+                "Cost": "Free for all",
+                "Pool Type": "Mini Pool",
+                "Outdoor or Indoor": "Outdoor",
+                "Closest subways": "2,5",
+                "Address": "Farragut Road & Ralph Avenue",
+                "Weekday Open Time": "11:00",
+                "Weekday Close Time": "19:00",
+                "Cleaning Start Time": "15:00",
+                "Cleaning End Time": "16:00",
+                "Saturday Open Time": "11:00",
+                "Saturday Close Time": "19:00",
+                "Sunday Open Time": "11:00",
+                "Sunday Close Time": "19:00",
+                "Availability": "Public",
+                "Source info": "https://www.nycgovparks.org/parks/glenwood-playground/facilities/outdoor-pools/glenwood-houses-pool",
+            },
+            {
+                "Pool": "PS 20 Playground Pool",
+                "Is Open?": "OPEN",
+                "Borough": "Brooklyn",
+                "Neighborhood": "Fort Greene",
+                "Cost": "Free for all",
+                "Pool Type": "Mini Pool",
+                "Outdoor or Indoor": "Outdoor",
+                "Closest subways": "G",
+                "Address": "Between Clermont Ave. & Adelphi St.",
+                "Weekday Open Time": "11:00",
+                "Weekday Close Time": "19:00",
+                "Cleaning Start Time": "15:00",
+                "Cleaning End Time": "16:00",
+                "Saturday Open Time": "11:00",
+                "Saturday Close Time": "19:00",
+                "Sunday Open Time": "11:00",
+                "Sunday Close Time": "19:00",
+                "Availability": "Public",
+                "Source info": "https://www.nycgovparks.org/parks/albert-j-parham-playground/facilities/outdoor-pools/ps-20-playground-pool",
+            },
+            {
+                "Pool": "Douglass and DeGraw Pool",
+                "Is Open?": "OPEN",
+                "Borough": "Brooklyn",
+                "Neighborhood": "Gowanus",
+                "Cost": "Free for all",
+                "Pool Type": "Intermediate,Wading Pool",
+                "Outdoor or Indoor": "Outdoor",
+                "Closest subways": "R",
+                "Address": "Third Avenue and Nevins Street",
+                "Weekday Open Time": "11:00",
+                "Weekday Close Time": "19:00",
+                "Cleaning Start Time": "15:00",
+                "Cleaning End Time": "16:00",
+                "Saturday Open Time": "11:00",
+                "Saturday Close Time": "19:00",
+                "Sunday Open Time": "11:00",
+                "Sunday Close Time": "19:00",
+                "Availability": "Public",
+                "Source info": "https://www.nycgovparks.org/parks/thomas-greene-playground/facilities/outdoor-pools/douglass-and-degraw-pool",
+            },
+            {
+                "Pool": "McCarren Park Pool",
+                "Is Open?": "OPEN",
+                "Borough": "Brooklyn",
+                "Neighborhood": "Greenpoint",
+                "Cost": "Free for all",
+                "Pool Type": "Olympic Size",
+                "Outdoor or Indoor": "Outdoor",
+                "Closest subways": "G,L",
+                "Address": "McCarren Park",
+                "Weekday Open Time": "11:00",
+                "Weekday Close Time": "19:00",
+                "Cleaning Start Time": "15:00",
+                "Cleaning End Time": "16:00",
+                "Saturday Open Time": "11:00",
+                "Saturday Close Time": "19:00",
+                "Sunday Open Time": "11:00",
+                "Sunday Close Time": "19:00",
+                "Availability": "Public",
+                "Source info": "https://www.nycgovparks.org/parks/mccarren-park/facilities/outdoor-pools/mccarren-park-pool",
+            },
+            {
+                "Pool": "Lindower Park Pool",
+                "Is Open?": "OPEN",
+                "Borough": "Brooklyn",
+                "Neighborhood": "Mill Basin",
+                "Cost": "Free for all",
+                "Pool Type": "Mini Pool",
+                "Outdoor or Indoor": "Outdoor",
+                "Closest subways": "B,Q",
+                "Address": "E. 60th St, Mill Rd. & Strickland Avenue",
+                "Weekday Open Time": "11:00",
+                "Weekday Close Time": "19:00",
+                "Cleaning Start Time": "15:00",
+                "Cleaning End Time": "16:00",
+                "Saturday Open Time": "11:00",
+                "Saturday Close Time": "19:00",
+                "Sunday Open Time": "11:00",
+                "Sunday Close Time": "19:00",
+                "Availability": "Public",
+                "Source info": "https://www.nycgovparks.org/parks/lindower-park/facilities/outdoor-pools/lindower-park-pool",
+            },
+            {
+                "Pool": "Red Hook Pool",
+                "Is Open?": "OPEN",
+                "Borough": "Brooklyn",
+                "Neighborhood": "Red Hook",
+                "Cost": "Free for all",
+                "Pool Type": "Wading Pool,Olympic Size",
+                "Outdoor or Indoor": "Outdoor",
+                "Closest subways": "F,G",
+                "Address": "Bay and Henry Streets",
+                "Weekday Open Time": "11:00",
+                "Weekday Close Time": "19:00",
+                "Cleaning Start Time": "15:00",
+                "Cleaning End Time": "16:00",
+                "Saturday Open Time": "11:00",
+                "Saturday Close Time": "19:00",
+                "Sunday Open Time": "11:00",
+                "Sunday Close Time": "19:00",
+                "Availability": "Public",
+                "Source info": "https://www.nycgovparks.org/parks/red-hook-park/facilities/outdoor-pools/red-hook-pool",
+            },
+            {
+                "Pool": "Sunset Park Pool",
+                "Is Open?": "OPEN",
+                "Borough": "Brooklyn",
+                "Neighborhood": "Sunset Park",
+                "Cost": "Free for all",
+                "Pool Type": "Olympic Size",
+                "Outdoor or Indoor": "Outdoor",
+                "Closest subways": "D,N,R",
+                "Address": "Seventh Avenue between 41st and 44th Streets",
+                "Weekday Open Time": "11:00",
+                "Weekday Close Time": "19:00",
+                "Cleaning Start Time": "15:00",
+                "Cleaning End Time": "16:00",
+                "Saturday Open Time": "11:00",
+                "Saturday Close Time": "19:00",
+                "Sunday Open Time": "11:00",
+                "Sunday Close Time": "19:00",
+                "Availability": "Public",
+                "Source info": "https://www.nycgovparks.org/parks/sunset-park/facilities/outdoor-pools/sunset-park-pool",
+            },
+            {
+                "Pool": "Metropolitan Pool",
+                "Is Open?": "OPEN",
+                "Borough": "Brooklyn",
+                "Neighborhood": "Williamsburg",
+                "Cost": "$150 for adults / year,$25 for seniors / year,$25 for young adults (18-24) / year,Free for people under 18 ",
+                "Pool Type": "Intermediate",
+                "Outdoor or Indoor": "Indoor",
+                "Closest subways": "G,L",
+                "Address": "Bedford and Metropolitan Avenues",
+                "Weekday Open Time": "11:00",
+                "Weekday Close Time": "18:45",
+                "Cleaning Start Time": "n/a",
+                "Cleaning End Time": "n/a",
+                "Saturday Open Time": "8:00",
+                "Saturday Close Time": "14:00",
+                "Sunday Open Time": "Closed",
+                "Sunday Close Time": "Closed",
+                "Availability": "Recreation Center membership required",
+                "Source info": "https://www.nycgovparks.org/parks/metropolitan-recreation-center/facilities/indoor-pools/metropolitan-pool",
+            },
+            {
+                "Pool": "Asser Levy Indoor Pool",
+                "Is Open?": "CLOSED",
+                "Borough": "Manhattan",
+                "Neighborhood": "Kips Bay",
+                "Cost": "$150 for adults / year,$25 for seniors / year,$25 for young adults (18-24) / year,Free for people under 18 ",
+                "Pool Type": "Intermediate",
+                "Outdoor or Indoor": "Indoor",
+                "Closest subways": "6,L",
+                "Address": "Asser Levy Place and E. 23rd Street",
+                "Weekday Open Time": "Closed for maintenance",
+                "Weekday Close Time": "Closed for maintenance",
+                "Cleaning Start Time": "Closed for maintenance",
+                "Cleaning End Time": "Closed for maintenance",
+                "Saturday Open Time": "Closed for maintenance",
+                "Saturday Close Time": "Closed for maintenance",
+                "Sunday Open Time": "Closed for maintenance",
+                "Sunday Close Time": "Closed for maintenance",
+                "Availability": "Recreation Center membership required",
+                "Source info": "https://www.nycgovparks.org/parks/asser-levy-recreation-center-pool-and-playground/facilities/indoor-pools/asser-levy-pool",
+            },
+            {
+                "Pool": "Frederick Douglass Pool",
+                "Is Open?": "OPEN",
+                "Borough": "Manhattan",
+                "Neighborhood": "Central Harlem",
+                "Cost": "Free for all",
+                "Pool Type": "Mini Pool",
+                "Outdoor or Indoor": "Outdoor",
+                "Closest subways": "1,B,C",
+                "Address": "Amsterdam Ave. between 100th & 102nd Streets",
+                "Weekday Open Time": "11:00",
+                "Weekday Close Time": "19:00",
+                "Cleaning Start Time": "15:00",
+                "Cleaning End Time": "16:00",
+                "Saturday Open Time": "11:00",
+                "Saturday Close Time": "19:00",
+                "Sunday Open Time": "11:00",
+                "Sunday Close Time": "19:00",
+                "Availability": "Public",
+                "Source info": "https://www.nycgovparks.org/parks/frederick-douglass-playground/facilities/outdoor-pools/frederick-douglass-pool",
+            },
+            {
+                "Pool": "Chelsea Pool",
+                "Is Open?": "OPEN",
+                "Borough": "Manhattan",
+                "Neighborhood": "Chelsea",
+                "Cost": "$150 for adults / year,$25 for seniors / year,$25 for young adults (18-24) / year,Free for people under 18 ",
+                "Pool Type": "Intermediate",
+                "Outdoor or Indoor": "Indoor",
+                "Closest subways": "C,E",
+                "Address": "West 25th St. between 9th & 10th Aves",
+                "Weekday Open Time": "11:00",
+                "Weekday Close Time": "19:00",
+                "Cleaning Start Time": "15:00",
+                "Cleaning End Time": "16:00",
+                "Saturday Open Time": "11:00",
+                "Saturday Close Time": "15:00",
+                "Sunday Open Time": "Closed",
+                "Sunday Close Time": "Closed",
+                "Availability": "Recreation Center membership required",
+                "Source info": "https://www.nycgovparks.org/parks/chelsea-recreation-center/facilities/indoor-pools/chelsea-pool",
+            },
+            {
+                "Pool": "Abe Lincoln Pool",
+                "Is Open?": "OPEN",
+                "Borough": "Manhattan",
+                "Neighborhood": "East Harlem",
+                "Cost": "Free for all",
+                "Pool Type": "Mini Pool",
+                "Outdoor or Indoor": "Outdoor",
+                "Closest subways": "2,3",
+                "Address": "5th Avenue & E. 135th Street",
+                "Weekday Open Time": "11:00",
+                "Weekday Close Time": "19:00",
+                "Cleaning Start Time": "15:00",
+                "Cleaning End Time": "16:00",
+                "Saturday Open Time": "11:00",
+                "Saturday Close Time": "19:00",
+                "Sunday Open Time": "11:00",
+                "Sunday Close Time": "19:00",
+                "Availability": "Public",
+                "Source info": "https://www.nycgovparks.org/parks/abraham-lincoln-playground/facilities/outdoor-pools/abe-lincoln-pool",
+            },
+            {
+                "Pool": "Thomas Jefferson Pool",
+                "Is Open?": "OPEN",
+                "Borough": "Manhattan",
+                "Neighborhood": "East Harlem",
+                "Cost": "Free for all",
+                "Pool Type": "Wading Pool,Olympic Size",
+                "Outdoor or Indoor": "Outdoor",
+                "Closest subways": "6",
+                "Address": "E. 112th Street and First Avenue",
+                "Weekday Open Time": "11:00",
+                "Weekday Close Time": "19:00",
+                "Cleaning Start Time": "15:00",
+                "Cleaning End Time": "16:00",
+                "Saturday Open Time": "11:00",
+                "Saturday Close Time": "19:00",
+                "Sunday Open Time": "11:00",
+                "Sunday Close Time": "19:00",
+                "Availability": "Public",
+                "Source info": "https://www.nycgovparks.org/parks/thomas-jefferson-park/facilities/outdoor-pools/thomas-jefferson-pool",
+            },
+            {
+                "Pool": "Wagner Pool",
+                "Is Open?": "OPEN",
+                "Borough": "Manhattan",
+                "Neighborhood": "East Harlem",
+                "Cost": "Free for all",
+                "Pool Type": "Intermediate,Wading Pool",
+                "Outdoor or Indoor": "Outdoor",
+                "Closest subways": "4,5,6",
+                "Address": "E. 124th Street between First and Second Avenues",
+                "Weekday Open Time": "11:00",
+                "Weekday Close Time": "19:00",
+                "Cleaning Start Time": "15:00",
+                "Cleaning End Time": "16:00",
+                "Saturday Open Time": "11:00",
+                "Saturday Close Time": "19:00",
+                "Sunday Open Time": "11:00",
+                "Sunday Close Time": "19:00",
+                "Availability": "Public",
+                "Source info": "https://www.nycgovparks.org/parks/wagner-houses-pool/facilities/outdoor-pools/wagner-pool",
+            },
+            {
+                "Pool": "Constance Baker Motley Pool",
+                "Is Open?": "OPEN",
+                "Borough": "Manhattan",
+                "Neighborhood": "East Harlem",
+                "Cost": "$150 for adults / year,$25 for seniors / year,$25 for young adults (18-24) / year,Free for people under 18 ",
+                "Pool Type": "Intermediate",
+                "Outdoor or Indoor": "Indoor",
+                "Closest subways": "4,5,6,N,R,W",
+                "Address": "E. 54th St. bet. First and Second Aves.",
+                "Weekday Open Time": "11:00",
+                "Weekday Close Time": "19:00",
+                "Cleaning Start Time": "",
+                "Cleaning End Time": "",
+                "Saturday Open Time": "8:00",
+                "Saturday Close Time": "14:45",
+                "Sunday Open Time": "Closed",
+                "Sunday Close Time": "Closed",
+                "Availability": "Recreation Center membership required",
+                "Source info": "https://www.nycgovparks.org/parks/constance-baker-motley-recreation-center/facilities/indoor-pools/constance-baker-motley-pool",
+            },
+            {
+                "Pool": "Gertrude Ederle Pool",
+                "Is Open?": "OPEN",
+                "Borough": "Manhattan",
+                "Neighborhood": "Upper West Side",
+                "Cost": "$150 for adults / year,$25 for seniors / year,$25 for young adults (18-24) / year,Free for people under 18 ",
+                "Pool Type": "Intermediate",
+                "Outdoor or Indoor": "Indoor",
+                "Closest subways": "1,A,B,C,D",
+                "Address": "232 West 60th Street",
+                "Weekday Open Time": "11:00",
+                "Weekday Close Time": "19:00",
+                "Cleaning Start Time": "",
+                "Cleaning End Time": "",
+                "Saturday Open Time": "8:00",
+                "Saturday Close Time": "15:30",
+                "Sunday Open Time": "Closed",
+                "Sunday Close Time": "Closed",
+                "Availability": "Recreation Center membership required",
+                "Source info": "https://www.nycgovparks.org/parks/west-59th-st-rec-ctr-and-pool/facilities/indoor-pools/gertrude-ederle-pool",
+            },
+            {
+                "Pool": "Dry Dock Pool",
+                "Is Open?": "OPEN",
+                "Borough": "Manhattan",
+                "Neighborhood": "East Village",
+                "Cost": "Free for all",
+                "Pool Type": "Intermediate,Wading Pool",
+                "Outdoor or Indoor": "Outdoor",
+                "Closest subways": "L",
+                "Address": "E. 10th St. between Aves. C and D",
+                "Weekday Open Time": "11:00",
+                "Weekday Close Time": "19:00",
+                "Cleaning Start Time": "15:00",
+                "Cleaning End Time": "16:00",
+                "Saturday Open Time": "11:00",
+                "Saturday Close Time": "19:00",
+                "Sunday Open Time": "11:00",
+                "Sunday Close Time": "19:00",
+                "Availability": "Public",
+                "Source info": "https://www.nycgovparks.org/parks/dry-dock-playground-and-pool/facilities/outdoor-pools/dry-dock-pool",
+            },
+            {
+                "Pool": "Tompkins Square Pool",
+                "Is Open?": "CLOSED",
+                "Borough": "Manhattan",
+                "Neighborhood": "East Village",
+                "Cost": "Free for all",
+                "Pool Type": "Mini Pool",
+                "Outdoor or Indoor": "Outdoor",
+                "Closest subways": "L",
+                "Address": "Ave. A between E. 7th & E. 10th Streets",
+                "Weekday Open Time": "Closed for construction",
+                "Weekday Close Time": "Closed for construction",
+                "Cleaning Start Time": "Closed for construction",
+                "Cleaning End Time": "Closed for construction",
+                "Saturday Open Time": "Closed for construction",
+                "Saturday Close Time": "Closed for construction",
+                "Sunday Open Time": "Closed for construction",
+                "Sunday Close Time": "Closed for construction",
+                "Availability": "Public",
+                "Source info": "https://www.nycgovparks.org/parks/tompkins-square-park/facilities/outdoor-pools/tompkins-square-pool",
+            },
+            {
+                "Pool": "Harlem Meer Center",
+                "Is Open?": "CLOSED",
+                "Borough": "Manhattan",
+                "Neighborhood": "Harlem",
+                "Cost": "Free for all",
+                "Pool Type": "Wading Pool,Olympic Size",
+                "Outdoor or Indoor": "Outdoor",
+                "Closest subways": "2,3",
+                "Address": "110th Street & Lenox Avenue",
+                "Weekday Open Time": "Closed for construction",
+                "Weekday Close Time": "Closed for construction",
+                "Cleaning Start Time": "Closed for construction",
+                "Cleaning End Time": "Closed for construction",
+                "Saturday Open Time": "Closed for construction",
+                "Saturday Close Time": "Closed for construction",
+                "Sunday Open Time": "Closed for construction",
+                "Sunday Close Time": "Closed for construction",
+                "Availability": "Public",
+                "Source info": "https://www.nycgovparks.org/parks/central-park/facilities/outdoor-pools/harlem-meer-center",
+            },
+            {
+                "Pool": "Jackie Robinson Pool",
+                "Is Open?": "OPEN",
+                "Borough": "Manhattan",
+                "Neighborhood": "Harlem",
+                "Cost": "Free for all",
+                "Pool Type": "Olympic Size",
+                "Outdoor or Indoor": "Outdoor",
+                "Closest subways": "3",
+                "Address": "Bradhurst Avenue and W. 146th Street",
+                "Weekday Open Time": "11:00",
+                "Weekday Close Time": "19:00",
+                "Cleaning Start Time": "15:00",
+                "Cleaning End Time": "16:00",
+                "Saturday Open Time": "11:00",
+                "Saturday Close Time": "19:00",
+                "Sunday Open Time": "11:00",
+                "Sunday Close Time": "19:00",
+                "Availability": "Public",
+                "Source info": "https://www.nycgovparks.org/parks/jackie-robinson-park_manhattan/facilities/outdoor-pools/jackie-robinson-pool",
+            },
+            {
+                "Pool": "Marcus Garvey Pool",
+                "Is Open?": "OPEN",
+                "Borough": "Manhattan",
+                "Neighborhood": "Harlem",
+                "Cost": "Free for all",
+                "Pool Type": "Intermediate",
+                "Outdoor or Indoor": "Outdoor",
+                "Closest subways": "2,3",
+                "Address": "124th Street and Fifth Avenue",
+                "Weekday Open Time": "11:00",
+                "Weekday Close Time": "19:00",
+                "Cleaning Start Time": "15:00",
+                "Cleaning End Time": "16:00",
+                "Saturday Open Time": "11:00",
+                "Saturday Close Time": "19:00",
+                "Sunday Open Time": "11:00",
+                "Sunday Close Time": "19:00",
+                "Availability": "Public",
+                "Source info": "https://www.nycgovparks.org/parks/marcus-garvey-park/facilities/outdoor-pools/marcus-garvey-pool",
+            },
+            {
+                "Pool": "Hansborough Pool",
+                "Is Open?": "CLOSED",
+                "Borough": "Manhattan",
+                "Neighborhood": "Harlem",
+                "Cost": "$150 for adults / year,$25 for seniors / year,$25 for young adults (18-24) / year,Free for people under 18 ",
+                "Pool Type": "Intermediate",
+                "Outdoor or Indoor": "Indoor",
+                "Closest subways": "2,3",
+                "Address": "134th St. between Fifth & Lenox Aves.",
+                "Weekday Open Time": "Closed for construction",
+                "Weekday Close Time": "Closed for construction",
+                "Cleaning Start Time": "Closed for construction",
+                "Cleaning End Time": "Closed for construction",
+                "Saturday Open Time": "Closed for construction",
+                "Saturday Close Time": "Closed for construction",
+                "Sunday Open Time": "Closed for construction",
+                "Sunday Close Time": "Closed for construction",
+                "Availability": "Recreation Center membership required",
+                "Source info": "https://www.nycgovparks.org/parks/hansborough-recreation-center/facilities/indoor-pools/hansborough-pool",
+            },
+            {
+                "Pool": "Asser Levy Pool",
+                "Is Open?": "OPEN",
+                "Borough": "Manhattan",
+                "Neighborhood": "Kips Bay",
+                "Cost": "Free for all",
+                "Pool Type": "Wading Pool,Intermediate",
+                "Outdoor or Indoor": "Outdoor",
+                "Closest subways": "6,L",
+                "Address": "Asser Levy Place and E. 23rd Street",
+                "Weekday Open Time": "11:00",
+                "Weekday Close Time": "19:00",
+                "Cleaning Start Time": "15:00",
+                "Cleaning End Time": "16:00",
+                "Saturday Open Time": "11:00",
+                "Saturday Close Time": "19:00",
+                "Sunday Open Time": "11:00",
+                "Sunday Close Time": "19:00",
+                "Availability": "Public",
+                "Source info": "https://www.nycgovparks.org/parks/asser-levy-recreation-center-pool-and-playground/facilities/outdoor-pools/asser-levy-pool",
+            },
+            {
+                "Pool": "Hamilton Fish Pool",
+                "Is Open?": "OPEN",
+                "Borough": "Manhattan",
+                "Neighborhood": "Lower East Side",
+                "Cost": "Free for all",
+                "Pool Type": "Wading Pool,Olympic Size",
+                "Outdoor or Indoor": "Outdoor",
+                "Closest subways": "F",
+                "Address": "Pitt Street and Houston Street",
+                "Weekday Open Time": "11:00",
+                "Weekday Close Time": "19:00",
+                "Cleaning Start Time": "15:00",
+                "Cleaning End Time": "16:00",
+                "Saturday Open Time": "11:00",
+                "Saturday Close Time": "19:00",
+                "Sunday Open Time": "11:00",
+                "Sunday Close Time": "19:00",
+                "Availability": "Public",
+                "Source info": "https://www.nycgovparks.org/parks/hamilton-fish-park/facilities/outdoor-pools/hamilton-fish-pool",
+            },
+            {
+                "Pool": "Vesuvio Pool",
+                "Is Open?": "OPEN",
+                "Borough": "Manhattan",
+                "Neighborhood": "SoHo",
+                "Cost": "Free for all",
+                "Pool Type": "Mini Pool",
+                "Outdoor or Indoor": "Outdoor",
+                "Closest subways": "C,E,R,W",
+                "Address": "Thompson St. between Spring & Prince Streets",
+                "Weekday Open Time": "11:00",
+                "Weekday Close Time": "19:00",
+                "Cleaning Start Time": "15:00",
+                "Cleaning End Time": "16:00",
+                "Saturday Open Time": "11:00",
+                "Saturday Close Time": "19:00",
+                "Sunday Open Time": "11:00",
+                "Sunday Close Time": "19:00",
+                "Availability": "Public",
+                "Source info": "https://www.nycgovparks.org/parks/vesuvio-playground/facilities/outdoor-pools/vesuvio-pool",
+            },
+            {
+                "Pool": "John Jay Pool",
+                "Is Open?": "OPEN",
+                "Borough": "Manhattan",
+                "Neighborhood": "Upper East Side",
+                "Cost": "Free for all",
+                "Pool Type": "Intermediate,Diving Pool",
+                "Outdoor or Indoor": "Outdoor",
+                "Closest subways": "6",
+                "Address": "East of York Avenue on 77th St.",
+                "Weekday Open Time": "11:00",
+                "Weekday Close Time": "19:00",
+                "Cleaning Start Time": "15:00",
+                "Cleaning End Time": "16:00",
+                "Saturday Open Time": "11:00",
+                "Saturday Close Time": "19:00",
+                "Sunday Open Time": "11:00",
+                "Sunday Close Time": "19:00",
+                "Availability": "Public",
+                "Source info": "https://www.nycgovparks.org/parks/john-jay-park-and-pool/facilities/outdoor-pools/john-jay-pool",
+            },
+            {
+                "Pool": "Highbridge Pool",
+                "Is Open?": "OPEN",
+                "Borough": "Manhattan",
+                "Neighborhood": "Washington Heights",
+                "Cost": "Free for all",
+                "Pool Type": "Olympic Size,Wading Pool",
+                "Outdoor or Indoor": "Outdoor",
+                "Closest subways": "1,A,C",
+                "Address": "Amsterdam Ave. and W. 173rd Street",
+                "Weekday Open Time": "11:00",
+                "Weekday Close Time": "19:00",
+                "Cleaning Start Time": "15:00",
+                "Cleaning End Time": "16:00",
+                "Saturday Open Time": "11:00",
+                "Saturday Close Time": "19:00",
+                "Sunday Open Time": "11:00",
+                "Sunday Close Time": "19:00",
+                "Availability": "Public",
+                "Source info": "https://www.nycgovparks.org/parks/highbridge-park/facilities/outdoor-pools/highbridge-pool",
+            },
+            {
+                "Pool": "Sheltering Arms Pool",
+                "Is Open?": "CLOSED FOR CLEANING",
+                "Borough": "Manhattan",
+                "Neighborhood": "Washington Heights",
+                "Cost": "Free for all",
+                "Pool Type": "Wading Pool,Intermediate",
+                "Outdoor or Indoor": "Outdoor",
+                "Closest subways": "1,A,C,B,D",
+                "Address": "W. 129th Street and Amsterdam Ave.",
+                "Weekday Open Time": "11:00",
+                "Weekday Close Time": "19:00",
+                "Cleaning Start Time": "15:00",
+                "Cleaning End Time": "16:00",
+                "Saturday Open Time": "11:00",
+                "Saturday Close Time": "19:00",
+                "Sunday Open Time": "11:00",
+                "Sunday Close Time": "19:00",
+                "Availability": "Public",
+                "Source info": "https://www.nycgovparks.org/parks/sheltering-arms-park/facilities/outdoor-pools/sheltering-arms-pool",
+            },
+            {
+                "Pool": "Tony Dapolito Pool",
+                "Is Open?": "CLOSED",
+                "Borough": "Manhattan",
+                "Neighborhood": "West Village",
+                "Cost": "Free for all",
+                "Pool Type": "Intermediate,Diving Pool",
+                "Outdoor or Indoor": "Outdoor",
+                "Closest subways": "1,A,C,E,B,D,F,M",
+                "Address": "Clarkson St. and Seventh Ave. South",
+                "Weekday Open Time": "Closed for construction",
+                "Weekday Close Time": "Closed for construction",
+                "Cleaning Start Time": "Closed for construction",
+                "Cleaning End Time": "Closed for construction",
+                "Saturday Open Time": "Closed for construction",
+                "Saturday Close Time": "Closed for construction",
+                "Sunday Open Time": "Closed for construction",
+                "Sunday Close Time": "Closed for construction",
+                "Availability": "Public",
+                "Source info": "https://www.nycgovparks.org/parks/tony-dapolito-recreation-center/facilities/outdoor-pools/tony-dapolito-pool",
+            },
+            {
+                "Pool": "Tony Dapolito Indoor Pool",
+                "Is Open?": "CLOSED",
+                "Borough": "Manhattan",
+                "Neighborhood": "West Village",
+                "Cost": "$150 for adults / year,$25 for seniors / year,$25 for young adults (18-24) / year,Free for people under 18 ",
+                "Pool Type": "Intermediate",
+                "Outdoor or Indoor": "Indoor",
+                "Closest subways": "1,A,C,E,B,D,F,M",
+                "Address": "Clarkson St. and Seventh Ave. South",
+                "Weekday Open Time": "Closed for construction",
+                "Weekday Close Time": "Closed for construction",
+                "Cleaning Start Time": "Closed for construction",
+                "Cleaning End Time": "Closed for construction",
+                "Saturday Open Time": "Closed for construction",
+                "Saturday Close Time": "Closed for construction",
+                "Sunday Open Time": "Closed for construction",
+                "Sunday Close Time": "Closed for construction",
+                "Availability": "Recreation Center membership required",
+                "Source info": "https://www.nycgovparks.org/parks/tony-dapolito-recreation-center/facilities/indoor-pools/tony-dapolito-pool",
+            },
+            {
+                "Pool": "Crotona Pool",
+                "Is Open?": "OPEN",
+                "Borough": "Bronx",
+                "Neighborhood": "Crotona Park East",
+                "Cost": "Free for all",
+                "Pool Type": "Olympic Size",
+                "Outdoor or Indoor": "Outdoor",
+                "Closest subways": "2,5",
+                "Address": "173rd Street and Fulton Avenue",
+                "Weekday Open Time": "11:00",
+                "Weekday Close Time": "19:00",
+                "Cleaning Start Time": "15:00",
+                "Cleaning End Time": "16:00",
+                "Saturday Open Time": "11:00",
+                "Saturday Close Time": "19:00",
+                "Sunday Open Time": "11:00",
+                "Sunday Close Time": "19:00",
+                "Availability": "Public",
+                "Source info": "https://www.nycgovparks.org/parks/crotona-park/facilities/outdoor-pools/crotona-pool",
+            },
+            {
+                "Pool": "Mapes Pool",
+                "Is Open?": "OPEN",
+                "Borough": "Bronx",
+                "Neighborhood": "East Tremont",
+                "Cost": "Free for all",
+                "Pool Type": "Wading Pool,Intermediate",
+                "Outdoor or Indoor": "Outdoor",
+                "Closest subways": "2,5",
+                "Address": "E. 180th Street between Mapes & Prospect Avenues",
+                "Weekday Open Time": "11:00",
+                "Weekday Close Time": "19:00",
+                "Cleaning Start Time": "15:00",
+                "Cleaning End Time": "16:00",
+                "Saturday Open Time": "11:00",
+                "Saturday Close Time": "19:00",
+                "Sunday Open Time": "11:00",
+                "Sunday Close Time": "19:00",
+                "Availability": "Public",
+                "Source info": "https://www.nycgovparks.org/parks/mapes-ballfield/facilities/outdoor-pools/mapes-pool",
+            },
+            {
+                "Pool": "Edenwald Houses Pool",
+                "Is Open?": "OPEN",
+                "Borough": "Bronx",
+                "Neighborhood": "Edenwald",
+                "Cost": "Free for all",
+                "Pool Type": "Mini Pool",
+                "Outdoor or Indoor": "Outdoor",
+                "Closest subways": "5",
+                "Address": "Schieffelin Avenue & E. 229th Street",
+                "Weekday Open Time": "11:00",
+                "Weekday Close Time": "19:00",
+                "Cleaning Start Time": "15:00",
+                "Cleaning End Time": "16:00",
+                "Saturday Open Time": "11:00",
+                "Saturday Close Time": "19:00",
+                "Sunday Open Time": "11:00",
+                "Sunday Close Time": "19:00",
+                "Availability": "Public",
+                "Source info": "https://www.nycgovparks.org/parks/edenwald-playground/facilities/outdoor-pools/edenwald-houses-pool",
+            },
+            {
+                "Pool": "Floating Pool",
+                "Is Open?": "OPEN",
+                "Borough": "Bronx",
+                "Neighborhood": "Hunts Point",
+                "Cost": "Free for all",
+                "Pool Type": "Intermediate",
+                "Outdoor or Indoor": "Outdoor",
+                "Closest subways": "6",
+                "Address": "Tiffany Street & Viele Avenue",
+                "Weekday Open Time": "11:00",
+                "Weekday Close Time": "19:00",
+                "Cleaning Start Time": "15:00",
+                "Cleaning End Time": "16:00",
+                "Saturday Open Time": "11:00",
+                "Saturday Close Time": "19:00",
+                "Sunday Open Time": "11:00",
+                "Sunday Close Time": "19:00",
+                "Availability": "Public",
+                "Source info": "https://www.nycgovparks.org/parks/X307/facilities/outdoor-pools/floating-pool",
+            },
+            {
+                "Pool": "St. Mary's Pool",
+                "Is Open?": "CLOSED",
+                "Borough": "Bronx",
+                "Neighborhood": "Mott Haven",
+                "Cost": "$150 for adults / year,$25 for seniors / year,$25 for young adults (18-24) / year,Free for people under 18 ",
+                "Pool Type": "Intermediate",
+                "Outdoor or Indoor": "Indoor",
+                "Closest subways": "6,2,5",
+                "Address": "St. Ann's Avenue and E. 145th Street",
+                "Weekday Open Time": "Closed for construction",
+                "Weekday Close Time": "Closed for construction",
+                "Cleaning Start Time": "Closed for construction",
+                "Cleaning End Time": "Closed for construction",
+                "Saturday Open Time": "Closed for construction",
+                "Saturday Close Time": "Closed for construction",
+                "Sunday Open Time": "Closed for construction",
+                "Sunday Close Time": "Closed for construction",
+                "Availability": "Recreation Center membership required",
+                "Source info": "https://www.nycgovparks.org/parks/st-marys-park/facilities/indoor-pools/st-marys-pool",
+            },
+            {
+                "Pool": "Foster Pool",
+                "Is Open?": "OPEN",
+                "Borough": "Bronx",
+                "Neighborhood": "Pelham Parkway",
+                "Cost": "Free for all",
+                "Pool Type": "Intermediate,Wading Pool",
+                "Outdoor or Indoor": "Outdoor",
+                "Closest subways": "B,D,4",
+                "Address": "E. 164th St. bet. Jerome & River Aves.",
+                "Weekday Open Time": "11:00",
+                "Weekday Close Time": "19:00",
+                "Cleaning Start Time": "15:00",
+                "Cleaning End Time": "16:00",
+                "Saturday Open Time": "11:00",
+                "Saturday Close Time": "19:00",
+                "Sunday Open Time": "11:00",
+                "Sunday Close Time": "19:00",
+                "Availability": "Public",
+                "Source info": "https://www.nycgovparks.org/parks/foster-park/facilities/outdoor-pools/foster-pool",
+            },
+            {
+                "Pool": "Van Cortlandt Pool",
+                "Is Open?": "OPEN",
+                "Borough": "Bronx",
+                "Neighborhood": "Van Cortlandt Park",
+                "Cost": "Free for all",
+                "Pool Type": "Wading Pool,Olympic Size",
+                "Outdoor or Indoor": "Outdoor",
+                "Closest subways": "1",
+                "Address": "W. 242nd St. and Broadway",
+                "Weekday Open Time": "11:00",
+                "Weekday Close Time": "19:00",
+                "Cleaning Start Time": "15:00",
+                "Cleaning End Time": "16:00",
+                "Saturday Open Time": "11:00",
+                "Saturday Close Time": "19:00",
+                "Sunday Open Time": "11:00",
+                "Sunday Close Time": "19:00",
+                "Availability": "Public",
+                "Source info": "https://www.nycgovparks.org/parks/VanCortlandtPark/facilities/outdoor-pools/van-cortlandt-pool",
+            },
+            {
+                "Pool": "Thompson Pool",
+                "Is Open?": "OPEN",
+                "Borough": "Bronx",
+                "Neighborhood": "West Farms",
+                "Cost": "Free for all",
+                "Pool Type": "Mini Pool",
+                "Outdoor or Indoor": "Outdoor",
+                "Closest subways": "6",
+                "Address": "E. 174th Street & Bronx River Avenue",
+                "Weekday Open Time": "11:00",
+                "Weekday Close Time": "19:00",
+                "Cleaning Start Time": "15:00",
+                "Cleaning End Time": "16:00",
+                "Saturday Open Time": "11:00",
+                "Saturday Close Time": "19:00",
+                "Sunday Open Time": "11:00",
+                "Sunday Close Time": "19:00",
+                "Availability": "Public",
+                "Source info": "https://www.nycgovparks.org/parks/playground-174/facilities/outdoor-pools/thompson-pool",
+            },
+            {
+                "Pool": "Astoria Pool",
+                "Is Open?": "OPEN",
+                "Borough": "Queens",
+                "Neighborhood": "Astoria",
+                "Cost": "Free for all",
+                "Pool Type": "Olympic Size",
+                "Outdoor or Indoor": "Outdoor",
+                "Closest subways": "N,W",
+                "Address": "19th Street and 23rd Drive",
+                "Weekday Open Time": "11:00",
+                "Weekday Close Time": "19:00",
+                "Cleaning Start Time": "15:00",
+                "Cleaning End Time": "16:00",
+                "Saturday Open Time": "11:00",
+                "Saturday Close Time": "19:00",
+                "Sunday Open Time": "11:00",
+                "Sunday Close Time": "19:00",
+                "Availability": "Public",
+                "Source info": "https://www.nycgovparks.org/parks/astoria-park/facilities/outdoor-pools/astoria-pool",
+            },
+            {
+                "Pool": "Fort Totten Pool",
+                "Is Open?": "OPEN",
+                "Borough": "Queens",
+                "Neighborhood": "Bayside",
+                "Cost": "Free for all",
+                "Pool Type": "Wading Pool,Diving Pool,Intermediate",
+                "Outdoor or Indoor": "Outdoor",
+                "Closest subways": "7",
+                "Address": "338 Story Avenue",
+                "Weekday Open Time": "11:00",
+                "Weekday Close Time": "19:00",
+                "Cleaning Start Time": "15:00",
+                "Cleaning End Time": "16:00",
+                "Saturday Open Time": "11:00",
+                "Saturday Close Time": "19:00",
+                "Sunday Open Time": "11:00",
+                "Sunday Close Time": "19:00",
+                "Availability": "Public",
+                "Source info": "https://www.nycgovparks.org/parks/fort-totten-park/facilities/outdoor-pools/fort-totten-pool",
+            },
+            {
+                "Pool": "Marie Curie Park Pool",
+                "Is Open?": "OPEN",
+                "Borough": "Queens",
+                "Neighborhood": "Bayside",
+                "Cost": "Free for all",
+                "Pool Type": "Mini Pool",
+                "Outdoor or Indoor": "Outdoor",
+                "Closest subways": "E,F,M,R",
+                "Address": "211th Street & 46th Avenue",
+                "Weekday Open Time": "11:00",
+                "Weekday Close Time": "19:00",
+                "Cleaning Start Time": "15:00",
+                "Cleaning End Time": "16:00",
+                "Saturday Open Time": "11:00",
+                "Saturday Close Time": "19:00",
+                "Sunday Open Time": "11:00",
+                "Sunday Close Time": "19:00",
+                "Availability": "Public",
+                "Source info": "https://www.nycgovparks.org/parks/marie-curie-playground/facilities/outdoor-pools/marie-curie-park-pool",
+            },
+            {
+                "Pool": "Fisher Pool",
+                "Is Open?": "OPEN",
+                "Borough": "Queens",
+                "Neighborhood": "East Elmhurst",
+                "Cost": "Free for all",
+                "Pool Type": "Wading Pool,Intermediate",
+                "Outdoor or Indoor": "Outdoor",
+                "Closest subways": "N,W",
+                "Address": " 99th Street and 32nd Avenue",
+                "Weekday Open Time": "11:00",
+                "Weekday Close Time": "19:00",
+                "Cleaning Start Time": "15:00",
+                "Cleaning End Time": "16:00",
+                "Saturday Open Time": "11:00",
+                "Saturday Close Time": "19:00",
+                "Sunday Open Time": "11:00",
+                "Sunday Close Time": "19:00",
+                "Availability": "Public",
+                "Source info": "https://www.nycgovparks.org/parks/fisher-pool/facilities/outdoor-pools/fisher-pool",
+            },
+            {
+                "Pool": "Flushing Meadows Corona Park Pool & Rink",
+                "Is Open?": "OPEN",
+                "Borough": "Queens",
+                "Neighborhood": "Flushing Meadows-Corona Park",
+                "Cost": "$150 for adults / year,$25 for seniors / year,$25 for young adults (18-24) / year,Free for people under 18 ",
+                "Pool Type": "Olympic Size",
+                "Outdoor or Indoor": "Indoor",
+                "Closest subways": "7",
+                "Address": "Avery Avenue and 131 Street",
+                "Weekday Open Time": "11:00",
+                "Weekday Close Time": "19:00",
+                "Cleaning Start Time": "00:00",
+                "Cleaning End Time": "00:00",
+                "Saturday Open Time": "Closed",
+                "Saturday Close Time": "Closed",
+                "Sunday Open Time": "9:00",
+                "Sunday Close Time": "17:00",
+                "Availability": "Recreation Center membership required",
+                "Source info": "https://www.nycgovparks.org/parks/flushing-meadows-corona-park/facilities/indoor-pools/flushing-meadows-corona-park-pool-rink",
+            },
+            {
+                "Pool": "PS 186 Playground Pool",
+                "Is Open?": "OPEN",
+                "Borough": "Queens",
+                "Neighborhood": "Glen Oaks",
+                "Cost": "Free for all",
+                "Pool Type": "Mini Pool",
+                "Outdoor or Indoor": "Outdoor",
+                "Closest subways": "",
+                "Address": "Little Neck Parkway & 72nd Avenue",
+                "Weekday Open Time": "11:00",
+                "Weekday Close Time": "19:00",
+                "Cleaning Start Time": "15:00",
+                "Cleaning End Time": "16:00",
+                "Saturday Open Time": "11:00",
+                "Saturday Close Time": "19:00",
+                "Sunday Open Time": "11:00",
+                "Sunday Close Time": "19:00",
+                "Availability": "Public",
+                "Source info": "https://www.nycgovparks.org/parks/Q327/facilities/outdoor-pools/ps-186-playground-pool",
+            },
+            {
+                "Pool": "Liberty Pool",
+                "Is Open?": "OPEN",
+                "Borough": "Queens",
+                "Neighborhood": "Jamaica",
+                "Cost": "Free for all",
+                "Pool Type": "Wading Pool,Intermediate",
+                "Outdoor or Indoor": "Outdoor",
+                "Closest subways": "E,J,Z",
+                "Address": "173rd Street and 106th Avenue",
+                "Weekday Open Time": "11:00",
+                "Weekday Close Time": "19:00",
+                "Cleaning Start Time": "15:00",
+                "Cleaning End Time": "16:00",
+                "Saturday Open Time": "11:00",
+                "Saturday Close Time": "19:00",
+                "Sunday Open Time": "11:00",
+                "Sunday Close Time": "19:00",
+                "Availability": "Public",
+                "Source info": "https://www.nycgovparks.org/parks/detective-keith-l-williams-park-liberty-park/facilities/outdoor-pools/liberty-pool",
+            },
+            {
+                "Pool": "Roy Wilkins Pool",
+                "Is Open?": "OPEN",
+                "Borough": "Queens",
+                "Neighborhood": "St. Albans",
+                "Cost": "$150 for adults / year,$25 for seniors / year,$25 for young adults (18-24) / year,Free for people under 18 ",
+                "Pool Type": "Intermediate",
+                "Outdoor or Indoor": "Indoor",
+                "Closest subways": "F",
+                "Address": "177th Street and Baisley Boulevard",
+                "Weekday Open Time": "11:00",
+                "Weekday Close Time": "19:00",
+                "Cleaning Start Time": "",
+                "Cleaning End Time": "",
+                "Saturday Open Time": "8:00",
+                "Saturday Close Time": "16:00",
+                "Sunday Open Time": "Closed",
+                "Sunday Close Time": "Closed",
+                "Availability": "Recreation Center membership required",
+                "Source info": "https://www.nycgovparks.org/parks/roy-wilkins-recreation-center/facilities/indoor-pools/roy-wilkins-pool",
+            },
+            {
+                "Pool": "Windmuller Pool",
+                "Is Open?": "OPEN",
+                "Borough": "Queens",
+                "Neighborhood": "Woodside",
+                "Cost": "Free for all",
+                "Pool Type": "Mini Pool",
+                "Outdoor or Indoor": "Outdoor",
+                "Closest subways": "7",
+                "Address": "54th Street & 39th Road",
+                "Weekday Open Time": "11:00",
+                "Weekday Close Time": "19:00",
+                "Cleaning Start Time": "15:00",
+                "Cleaning End Time": "16:00",
+                "Saturday Open Time": "11:00",
+                "Saturday Close Time": "19:00",
+                "Sunday Open Time": "11:00",
+                "Sunday Close Time": "19:00",
+                "Availability": "Public",
+                "Source info": "https://www.nycgovparks.org/parks/lawrence-virgilio-playground/facilities/outdoor-pools/windmuller-pool",
+            },
+            {
+                "Pool": "PS 46 Playground Pool",
+                "Is Open?": "OPEN",
+                "Borough": "Staten Island",
+                "Neighborhood": "Concord",
+                "Cost": "Free for all",
+                "Pool Type": "Mini Pool",
+                "Outdoor or Indoor": "Outdoor",
+                "Closest subways": "Staten Island Railway",
+                "Address": "Parkinson Avenue & Kramer Street",
+                "Weekday Open Time": "11:00",
+                "Weekday Close Time": "19:00",
+                "Cleaning Start Time": "15:00",
+                "Cleaning End Time": "16:00",
+                "Saturday Open Time": "11:00",
+                "Saturday Close Time": "19:00",
+                "Sunday Open Time": "11:00",
+                "Sunday Close Time": "19:00",
+                "Availability": "Public",
+                "Source info": "https://www.nycgovparks.org/parks/old-town-playground/facilities/outdoor-pools/ps-46-playground-pool",
+            },
+            {
+                "Pool": "Faber Pool",
+                "Is Open?": "OPEN",
+                "Borough": "Staten Island",
+                "Neighborhood": "Port Richmond",
+                "Cost": "Free for all",
+                "Pool Type": "Intermediate",
+                "Outdoor or Indoor": "Outdoor",
+                "Closest subways": "Staten Island Railway",
+                "Address": "Faber Street and Richmond Terrace",
+                "Weekday Open Time": "11:00",
+                "Weekday Close Time": "19:00",
+                "Cleaning Start Time": "15:00",
+                "Cleaning End Time": "16:00",
+                "Saturday Open Time": "11:00",
+                "Saturday Close Time": "19:00",
+                "Sunday Open Time": "11:00",
+                "Sunday Close Time": "19:00",
+                "Availability": "Public",
+                "Source info": "https://www.nycgovparks.org/parks/faber-pool-and-park/facilities/outdoor-pools/faber-pool",
+            },
+            {
+                "Pool": "General Douglas Pool",
+                "Is Open?": "OPEN",
+                "Borough": "Staten Island",
+                "Neighborhood": "Sea View",
+                "Cost": "Free for all",
+                "Pool Type": "Mini Pool",
+                "Outdoor or Indoor": "Outdoor",
+                "Closest subways": "Staten Island Railway",
+                "Address": "Jefferson Street & Seaver Avenue",
+                "Weekday Open Time": "11:00",
+                "Weekday Close Time": "19:00",
+                "Cleaning Start Time": "15:00",
+                "Cleaning End Time": "16:00",
+                "Saturday Open Time": "11:00",
+                "Saturday Close Time": "19:00",
+                "Sunday Open Time": "11:00",
+                "Sunday Close Time": "19:00",
+                "Availability": "Public",
+                "Source info": "https://www.nycgovparks.org/parks/gen-douglas-macarthur-park/facilities/outdoor-pools/general-douglas-pool",
+            },
+            {
+                "Pool": "Lyons Pool",
+                "Is Open?": "OPEN",
+                "Borough": "Staten Island",
+                "Neighborhood": "Tompkinsville",
+                "Cost": "Free for all",
+                "Pool Type": "Olympic Size",
+                "Outdoor or Indoor": "Outdoor",
+                "Closest subways": "Staten Island Railway",
+                "Address": "Pier 6 and Victory Boulevard",
+                "Weekday Open Time": "11:00",
+                "Weekday Close Time": "19:00",
+                "Cleaning Start Time": "15:00",
+                "Cleaning End Time": "16:00",
+                "Saturday Open Time": "11:00",
+                "Saturday Close Time": "19:00",
+                "Sunday Open Time": "11:00",
+                "Sunday Close Time": "19:00",
+                "Availability": "Public",
+                "Source info": "https://www.nycgovparks.org/parks/lyons-pool/facilities/outdoor-pools/lyons-pool",
+            },
+            {
+                "Pool": "Tottenville Pool",
+                "Is Open?": "OPEN",
+                "Borough": "Staten Island",
+                "Neighborhood": "Tottenville",
+                "Cost": "Free for all",
+                "Pool Type": "Wading Pool,Intermediate",
+                "Outdoor or Indoor": "Outdoor",
+                "Closest subways": "Staten Island Railway",
+                "Address": "Hylan Boulevard and Joline Avenue",
+                "Weekday Open Time": "11:00",
+                "Weekday Close Time": "19:00",
+                "Cleaning Start Time": "15:00",
+                "Cleaning End Time": "16:00",
+                "Saturday Open Time": "11:00",
+                "Saturday Close Time": "19:00",
+                "Sunday Open Time": "11:00",
+                "Sunday Close Time": "19:00",
+                "Availability": "Public",
+                "Source info": "https://www.nycgovparks.org/parks/tottenville-pool/facilities/outdoor-pools/tottenville-pool",
+            },
+            {
+                "Pool": "Maggie Howard Pool",
+                "Is Open?": "OPEN",
+                "Borough": "Staten Island",
+                "Neighborhood": "West Brighton",
+                "Cost": "Free for all",
+                "Pool Type": "Mini Pool",
+                "Outdoor or Indoor": "Outdoor",
+                "Closest subways": "Staten Island Railway",
+                "Address": "Tompkins Ave. btwn Hill & Broad Sts.",
+                "Weekday Open Time": "11:00",
+                "Weekday Close Time": "19:00",
+                "Cleaning Start Time": "15:00",
+                "Cleaning End Time": "16:00",
+                "Saturday Open Time": "11:00",
+                "Saturday Close Time": "19:00",
+                "Sunday Open Time": "11:00",
+                "Sunday Close Time": "19:00",
+                "Availability": "Public",
+                "Source info": "https://www.nycgovparks.org/parks/rev-dr-maggie-howard-playground/facilities/outdoor-pools/maggie-howard-pool",
+            },
+            {
+                "Pool": "West Brighton Pool",
+                "Is Open?": "OPEN",
+                "Borough": "Staten Island",
+                "Neighborhood": "West Brighton",
+                "Cost": "Free for all",
+                "Pool Type": "Wading Pool,Intermediate",
+                "Outdoor or Indoor": "Outdoor",
+                "Closest subways": "Staten Island Railway",
+                "Address": "Henderson Avenue between Broadway and Chappel Streets",
+                "Weekday Open Time": "11:00",
+                "Weekday Close Time": "19:00",
+                "Cleaning Start Time": "15:00",
+                "Cleaning End Time": "16:00",
+                "Saturday Open Time": "11:00",
+                "Saturday Close Time": "19:00",
+                "Sunday Open Time": "11:00",
+                "Sunday Close Time": "19:00",
+                "Availability": "Public",
+                "Source info": "https://www.nycgovparks.org/parks/corporal-thompson-park/facilities/outdoor-pools/west-brighton-pool",
+            }
+        ];
+
+
+        ///////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////
+
+
+        document.getElementById("filterOpenNow").onchange = refreshFilters;
+        document.getElementById("filterFree").onchange = refreshFilters;
+        document.getElementById("boroughChooser").onchange = refreshFilters;
+
+        function refreshFilters() {
+            onlyOpenNow = document.getElementById("filterOpenNow").checked;
+            onlyFree = document.getElementById("filterFree").checked;
+            boroughChooser = document.getElementById("boroughChooser").children;
+
+            // for checkbox
+            // let chosenBoroughs = [];
+            // for (button of boroughChooser) {
+            //     if (button.checked) {
+            //         chosenBoroughs.push(button.id.split("_")[1]);
+            //     }
+            // }
+
+            // for radio
+            let borough;
+            for (button of boroughChooser) {
+                if (button.checked) {
+                    borough = button.id.split("_")[1];
+                    break;
+                }
+            }
+
+            Array.from(document.getElementById("card-container").children).forEach(function (card) {
+                poolBorough = card.querySelector(".pool_borough").innerText.toLowerCase()
+                    .replace("(", "").replace(")", "").replace("staten island", "staten");
+
+                // for checkbox
+                // if ((chosenBoroughs.length != 0)
+                //     && (chosenBoroughs.length != 5)
+                //     && (chosenBoroughs.indexOf(poolBorough) == -1)) {
+                //     card.style.display = "none";
+                if ((borough != "all") && (borough != poolBorough)) {
+                    card.style.display = "none";
+                } else if (onlyOpenNow && card.querySelector(".openbadge").innerText != "OPEN") {
+                    card.style.display = "none";
+                } else if (onlyFree && card.querySelector(".ispoolfree").innerText != "Free for everyone") {
+                    card.style.display = "none";
+                } else {
+                    card.style.display = "";
+                }
+            });
+        }
+
+
+        let cardContainer;
+        let createCard = (pool) => {
+            let card = document.createElement('div');
+            card.className = 'card text-bg-light mb-3';
+
+            let cardBody = document.createElement('div');
+            cardBody.className = 'card-body';
+
+            let title = document.createElement('h5');
+            title.innerText = pool["Pool"] + " ";
+            title.className = 'card-title';
+
+            title.appendChild(generateOpenBadge(pool));
+
+            let text = document.createElement('div');
+            text.className = 'card-text container text-left';
+
+            let row = document.createElement('div');
+            row.className = 'row';
+
+            let location = document.createElement('div');
+            location.className = 'col-12 col-md-4 pb-1';
+            let l1 = document.createElement('div');
+            l1.style = 'font-weight: bold';
+            l1.innerText = "Location";
+            let l2 = document.createElement('div');
+            l2.innerText = pool["Neighborhood"] + " ";
+            boroughname = document.createElement('span');
+            boroughname.className = "pool_borough"
+            boroughname.innerText = "(" + pool["Borough"] + ")";
+            l2.appendChild(boroughname);
+            let l3 = document.createElement('div');
+            l3.innerText = pool["Address"];
+            let l4 = makeSubwayElement(pool['Closest subways']);
+
+            location.appendChild(l1);
+            location.appendChild(l2);
+            location.appendChild(l3);
+            location.appendChild(l4);
+            row.appendChild(location);
+
+
+            let type = document.createElement('div');
+            type.className = 'col-12 col-md-4 pb-1';
+            let t1 = document.createElement('div');
+            t1.style = 'font-weight: bold';
+            t1.innerText = "Type";
+            let t2 = document.createElement('div');
+            t2.innerText = pool["Outdoor or Indoor"] + " Pool";
+            let t3 = document.createElement('div');
+            t3.innerText = pool["Pool Type"].replace(",", " & ").replace("Intermediate", "Intermediate Size");
+            let t4 = document.createElement('div');
+            t4.className = "ispoolfree"
+            t4.innerText = pool["Availability"] == "Public" ? "Free for everyone" : "Membership required ($$)";
+            let t5 = document.createElement('div');
+            el = document.createElement('a');
+            el.innerText = "Website";
+            el.href = pool["Source info"];
+            t5.appendChild(el);
+            type.appendChild(t1);
+            type.appendChild(t2);
+            type.appendChild(t3);
+            type.appendChild(t4);
+            type.appendChild(t5);
+            row.appendChild(type);
+
+            let hours = document.createElement('div');
+            hours.className = 'col-12 col-md-4 pb-1';
+            let h1 = document.createElement('div');
+            h1.style = 'font-weight: bold';
+            h1.innerText = "Hours";
+            let h2 = document.createElement('div');
+            h2.innerText = "Weekdays: " + handleHours(pool["Weekday Open Time"], pool["Weekday Close Time"]);
+            let h3 = document.createElement('div');
+            h3.innerText = "Saturday: " + handleHours(pool["Saturday Open Time"], pool["Saturday Close Time"]);
+            let h4 = document.createElement('div');
+            h4.innerText = "Sunday: " + handleHours(pool["Sunday Open Time"], pool["Sunday Close Time"]);
+            let h5 = document.createElement('div');
+            h5.innerText = "Cleaning: " + handleHours(pool["Cleaning Start Time"], pool["Cleaning End Time"]);
+            hours.appendChild(h1);
+            hours.appendChild(h2);
+            hours.appendChild(h3);
+            hours.appendChild(h4);
+            hours.appendChild(h5);
+            row.appendChild(hours);
+
+            cardBody.appendChild(title);
+
+            text.appendChild(row);
+            cardBody.appendChild(text);
+
+            card.appendChild(cardBody);
+            cardContainer.appendChild(card);
+
+        }
+
+        function generateOpenBadge(pool) {
+            let openbadge = document.createElement("span");
+            openbadge.className = "badge openbadge";
+            openbadge.innerText = isPoolOpen(pool);
+            if (openbadge.innerText == "OPEN") {
+                openbadge.className += " text-bg-success";
+            } else if (openbadge.innerText == "CLOSED") {
+                openbadge.className += " text-bg-danger";
+            } else {
+                openbadge.className += " text-bg-info";
+            }
+            return openbadge;
+        }
+
+        var SUBWAY_COLORS = {
+            1: 'red',
+            2: 'red',
+            3: 'red',
+            4: 'green',
+            5: 'green',
+            6: 'green',
+            7: 'purple',
+            "A": 'blue',
+            "C": 'blue',
+            "E": 'blue',
+            "B": 'orange',
+            "D": 'orange',
+            "F": 'orange',
+            "M": 'orange',
+            "G": 'green-2',
+            "N": 'yellow',
+            "Q": 'yellow',
+            "R": 'yellow',
+            "W": 'yellow',
+            "L": 'gray',
+            "J": 'brown',
+            "Z": 'brown',
+            "Staten Island Railway": "sir",
+        }
+
+        function makeSubwayElement(subwaydata) {
+            let l4 = document.createElement('div');
+            subways = subwaydata.split(",").sort();
+            l4.innerText = "Subway: ";
+            if (subways[0] == "") {
+                l4.innerText += "N/A"
+            } else if (subways[0] == "Staten Island Railway") {
+                circle = document.createElement('span');
+                circle.className = 'badge rounded-pill';
+                circle.style = "background-color: #0078C6";
+                circle.innerText = "SIR";
+                l4.appendChild(circle);
+            } else {
+                for (i = 0; i < subways.length; i++) {
+                    circle = document.createElement('span');
+                    circle.className = 'subway-icon mta-' + SUBWAY_COLORS[subways[i]];
+                    circle.innerText = subways[i];
+                    spacer = document.createElement('span');
+                    spacer.innerText = " ";
+                    l4.appendChild(circle);
+                    l4.appendChild(spacer);
+                }
+            }
+            return l4;
+        }
+
+        function poolClosedAllDay(text) {
+            text = text.toLowerCase();
+            if ((text.indexOf("close") != -1) || (text.indexOf("n/a") != -1) || (text.length == 0)) {
+                return true;
+            }
+            return false;
+        }
+
+        function handleHours(open, close) {
+            if (poolClosedAllDay(open)) {
+                return open;
+            }
+            output = "";
+            output += (+open.split(":")[0] % 12).toString();
+            if (open.split(":")[1] != "00") {
+                output += ":" + open.split(":")[1];
+            }
+            output += (+open.split(":")[0] < 12 ? "am" : "pm");
+            output += "-";
+            output += (+close.split(":")[0] % 12).toString();
+            if (close.split(":")[1] != "00") {
+                output += ":" + close.split(":")[1];
+            }
+            output += (+close.split(":")[0] < 12 ? "am" : "pm");
+            return output;
+        }
+
+        function isTime1BeforeTime2(t1, t2) {
+            return (+t1.split(":")[0] * 100 + (+t1.split(":")[1])) < (+t2.split(":")[0] * 100 + (+t2.split(":")[1]));
+        }
+
+        function isPoolOpen(pool) {
+            dateObj = new Date();
+
+            // for testing
+            // dateObj.setDate(29)
+            // dateObj.setHours(18);
+            // dateObj.setMinutes(59);
+
+            curDay = dateObj.getDay();
+            curTime = dateObj.getHours().toString() + ":" + dateObj.getMinutes().toString();
+
+            let day = "Weekday";
+            if (curDay == 0) {
+                day = "Sunday";
+            } else if (curDay == 6) {
+                day = "Saturday";
+            }
+
+            openTime = pool[day + " Open Time"];
+            closeTime = pool[day + " Close Time"];
+            cleanStart = pool["Cleaning Start Time"];
+            cleanEnd = pool["Cleaning End Time"];
+
+            // closed all day?
+            if (poolClosedAllDay(openTime)) {
+                return "CLOSED";
+            }
+            // too early?
+            if (isTime1BeforeTime2(curTime, openTime)) {
+                return "CLOSED";
+            }
+            // too late?
+            if (!isTime1BeforeTime2(curTime, closeTime)) {
+                return "CLOSED";
+            }
+            // cleaning time?
+            if (!isTime1BeforeTime2(curTime, cleanStart) && isTime1BeforeTime2(curTime, cleanEnd)) {
+                return "CLEANING";
+            }
+            return "OPEN";
+        }
+
+        let generatePools = () => {
+            // if (cardContainer) {
+            //     document.getElementById('card-container').replaceWith(cardContainer);
+            //     return;
+            // }
+
+            pooldata.sort((a, b) => a["Borough"].localeCompare(b["Borough"]) || a["Pool"].localeCompare(b["Pool"]));
+
+            cardContainer = document.getElementById('card-container');
+            pooldata.forEach((pool) => { createCard(pool) });
+        };
+
+        generatePools();
+        refreshFilters();
+
+        function refreshWithCurrentTime() {
+            console.log("Refreshing with current time...")
+            pooldata.forEach(function (pool, idx) {
+                cardContainer.children[idx].querySelector(".openbadge").replaceWith(generateOpenBadge(pool));
+                generateOpenBadge(pool)
+            });
+            refreshFilters();
+        }
+        // refreshes every 60 seconds
+        // we replace ~50 DOM elements (OPEN/CLOSED badges) every time
+        // idk what's an appropriate amount performance-wise
+        setInterval(refreshWithCurrentTime, 1000 * 60)
+    </script>
+</body>
+
+</html>
