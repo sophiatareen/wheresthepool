@@ -1736,16 +1736,10 @@
             let t4 = document.createElement('div');
             t4.className = "ispoolfree"
             t4.innerText = pool["Availability"] == "Public" ? "Free for everyone" : "Membership required ($$)";
-            let t5 = document.createElement('div');
-            el = document.createElement('a');
-            el.innerText = "Website";
-            el.href = pool["Source info"];
-            t5.appendChild(el);
             type.appendChild(t1);
             type.appendChild(t2);
             type.appendChild(t3);
             type.appendChild(t4);
-            type.appendChild(t5);
             row.appendChild(type);
 
             let hours = document.createElement('div');
@@ -1753,19 +1747,44 @@
             let h1 = document.createElement('div');
             h1.style = 'font-weight: bold';
             h1.innerText = "Hours";
-            let h2 = document.createElement('div');
-            h2.innerText = "Weekdays: " + handleHours(pool["Weekday Open Time"], pool["Weekday Close Time"]);
-            let h3 = document.createElement('div');
-            h3.innerText = "Saturday: " + handleHours(pool["Saturday Open Time"], pool["Saturday Close Time"]);
-            let h4 = document.createElement('div');
-            h4.innerText = "Sunday: " + handleHours(pool["Sunday Open Time"], pool["Sunday Close Time"]);
-            let h5 = document.createElement('div');
-            h5.innerText = "Cleaning: " + handleHours(pool["Cleaning Start Time"], pool["Cleaning End Time"]);
+
             hours.appendChild(h1);
-            hours.appendChild(h2);
-            hours.appendChild(h3);
-            hours.appendChild(h4);
-            hours.appendChild(h5);
+            // don't show all this info if pool is closed all summere
+            if (pool["Weekday Open Time"].toLowerCase().indexOf("closed") != -1) {
+                let h2 = document.createElement('div');
+                h2.innerText = pool["Weekday Open Time"] + " 😔";
+                hours.appendChild(h2);
+            } else {
+                weekdayHours = handleHours(pool["Weekday Open Time"], pool["Weekday Close Time"]);
+                saturdayHours = handleHours(pool["Saturday Open Time"], pool["Saturday Close Time"]);
+                sundayHours = handleHours(pool["Sunday Open Time"], pool["Sunday Close Time"]);
+                // if time is the same every day, only show it once
+                if ((weekdayHours == saturdayHours) && (saturdayHours == sundayHours)) {
+                    let h2 = document.createElement('div');
+                    h2.innerText = "Daily: " + weekdayHours;
+                    hours.appendChild(h2);
+                } else {
+                    let h2 = document.createElement('div');
+                    let h3 = document.createElement('div');
+                    let h4 = document.createElement('div');
+                    h2.innerText = "Weekdays: " + weekdayHours;
+                    h3.innerText = "Saturday: " + saturdayHours;
+                    h4.innerText = "Sunday: " + sundayHours;
+                    hours.appendChild(h2);
+                    hours.appendChild(h3);
+                    hours.appendChild(h4);
+                }
+                let h5 = document.createElement('div');
+                h5.innerText = "Cleaning: " + handleHours(pool["Cleaning Start Time"], pool["Cleaning End Time"]);
+                hours.appendChild(h5);
+            }
+            // link to website to right column
+            let h6 = document.createElement('div');
+            el = document.createElement('a');
+            el.innerText = "Website";
+            el.href = pool["Source info"];
+            h6.appendChild(el);
+            hours.appendChild(h6);
             row.appendChild(hours);
 
             cardBody.appendChild(title);
