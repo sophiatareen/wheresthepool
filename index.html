@@ -216,7 +216,10 @@
         python -c 'import csv, json, sys; inp = open("data.csv", "r", encoding="utf-8-sig"); f = open("data.json", "x"); f.write(json.dumps([dict(r) for r in csv.DictReader(inp)])); inp.close(); f.close();'     
         
         -->
-
+            <div class="input-group">
+                <input id="search" type="text" class="form-control" oninput="refreshFilters()" placeholder="Search"
+                    value="">
+            </div>
             <div id='card-container' class="my-3 my-lg-2">
                 <!-- Sample card for reference -->
                 <div class="card text-bg-light mb-3">
@@ -1640,6 +1643,7 @@
             onlyOpenNow = document.getElementById("filterOpenNow").checked;
             onlyFree = document.getElementById("filterFree").checked;
             boroughChooser = document.getElementById("boroughChooser").children;
+            searchTerms = document.getElementById("search").value.trim().split(" ");
 
             // for checkbox
             // let chosenBoroughs = [];
@@ -1675,6 +1679,11 @@
                     card.style.display = "none";
                 } else {
                     card.style.display = "";
+                    for (i = 0; i < searchTerms.length; i++) {
+                        if (card.innerText.toLowerCase().indexOf(searchTerms[i]) == -1) {
+                            card.style.display = "none";
+                        }
+                    }
                 }
             });
         }
