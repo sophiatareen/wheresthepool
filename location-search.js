@@ -129,24 +129,48 @@ async function fetchSuggestions(input) {
     }));
 }
 
+// Fetch coordinates for a known place ID via Places API (New) — no Geocoding API needed.
 async function geocodePlaceId(placeId) {
-    const url = `https://maps.googleapis.com/maps/api/geocode/json?place_id=${placeId}&key=${GOOGLE_MAPS_API_KEY}`;
-    const res = await fetch(url);
+    const res = await fetch(`https://places.googleapis.com/v1/places/${placeId}`, {
+        headers: {
+            'X-Goog-Api-Key': GOOGLE_MAPS_API_KEY,
+            'X-Goog-FieldMask': 'location',
+        },
+    });
+    if (!res.ok) return null;
     const data = await res.json();
-    if (data.status === 'OK' && data.results[0]) {
-        const loc = data.results[0].geometry.location;
-        return { lat: loc.lat, lng: loc.lng };
+    if (data.location) {
+        return { lat: data.location.latitude, lng: data.location.longitude };
     }
     return null;
 }
 
+// Geocode raw text via Places API (New) text search — no Geocoding API needed.
 async function geocodeText(text) {
-    const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(text)}&region=us&key=${GOOGLE_MAPS_API_KEY}`;
-    const res = await fetch(url);
+    const res = await fetch('https://places.googleapis.com/v1/places:searchText', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Goog-Api-Key': GOOGLE_MAPS_API_KEY,
+            'X-Goog-FieldMask': 'places.location',
+        },
+        body: JSON.stringify({
+            textQuery: text,
+            locationBias: {
+                circle: {
+                    center: { latitude: 40.73, longitude: -73.93 },
+                    radius: 100000,
+                },
+            },
+        }),
+    });
+    if (!res.ok) return null;
     const data = await res.json();
-    if (data.status === 'OK' && data.results[0]) {
-        const loc = data.results[0].geometry.location;
-        return { lat: loc.lat, lng: loc.lng };
+    if (data.places && data.places[0] && data.places[0].location) {
+        return {
+            lat: data.places[0].location.latitude,
+            lng: data.places[0].location.longitude,
+        };
     }
     return null;
 }
@@ -208,11 +232,8 @@ function initLocationSearch() {
         _autocompleteDebounceTimer = setTimeout(async () => {
             const suggestions = await fetchSuggestions(val);
             showDropdown(suggestions, async (s) => {
-                console.log('[wtp] suggestion selected:', s);
                 input.value = s.label;
-                console.log('[wtp] calling geocodePlaceId with placeId:', s.placeId);
                 const coords = await geocodePlaceId(s.placeId);
-                console.log('[wtp] geocodePlaceId returned:', coords);
                 if (coords) {
                     applyLocationSearch(coords.lat, coords.lng);
                 } else {
