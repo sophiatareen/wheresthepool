@@ -208,8 +208,11 @@ function initLocationSearch() {
         _autocompleteDebounceTimer = setTimeout(async () => {
             const suggestions = await fetchSuggestions(val);
             showDropdown(suggestions, async (s) => {
+                console.log('[wtp] suggestion selected:', s);
                 input.value = s.label;
+                console.log('[wtp] calling geocodePlaceId with placeId:', s.placeId);
                 const coords = await geocodePlaceId(s.placeId);
+                console.log('[wtp] geocodePlaceId returned:', coords);
                 if (coords) {
                     applyLocationSearch(coords.lat, coords.lng);
                 } else {
