@@ -145,8 +145,28 @@ async function geocodePlaceId(placeId) {
     return null;
 }
 
-// Geocode raw text via Places API (New) text search — no Geocoding API needed.
+// Geocode raw text: zip codes go to Geocoding API (reliable for 5-digit zips);
+// everything else goes to Places searchText.
 async function geocodeText(text) {
+    if (/^\d{5}(-\d{4})?$/.test(text.trim())) {
+        return _geocodeZip(text.trim());
+    }
+    return _geocodeTextSearch(text);
+}
+
+async function _geocodeZip(zip) {
+    const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(zip)}&region=us&key=${GOOGLE_MAPS_API_KEY}`;
+    const res = await fetch(url);
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (data.status === 'OK' && data.results[0]) {
+        const loc = data.results[0].geometry.location;
+        return { lat: loc.lat, lng: loc.lng };
+    }
+    return null;
+}
+
+async function _geocodeTextSearch(text) {
     const res = await fetch('https://places.googleapis.com/v1/places:searchText', {
         method: 'POST',
         headers: {
@@ -247,7 +267,6 @@ function initLocationSearch() {
         if (e.key === 'Escape') { hideDropdown(); return; }
         if (e.key !== 'Enter') return;
         hideDropdown();
-        if (_selectedFromDropdown) return;
 
         const val = input.value.trim();
         if (!val) return;
@@ -255,7 +274,7 @@ function initLocationSearch() {
         if (coords) {
             applyLocationSearch(coords.lat, coords.lng);
         } else {
-            showInputError('Address not found. Try selecting a suggestion from the dropdown.');
+            showInputError('Address not found. Please try a different zip code or address.');
         }
     });
 
