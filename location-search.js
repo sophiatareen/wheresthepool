@@ -69,6 +69,7 @@ function applyLocationSearch(lat, lng) {
     input.classList.remove('is-invalid');
     const feedback = document.getElementById('location-input-feedback');
     if (feedback) feedback.innerText = '';
+    showLocationStatus('', '');
 
     const radiusMiles = Number(document.getElementById('radius-select').value);
     locationFilter = { lat, lng, radiusMiles };
@@ -322,24 +323,23 @@ function showInputError(msg) {
 // ─── "Use my location" geolocation ───────────────────────────────────────────
 
 function useMyLocation() {
-    const btn = document.getElementById('use-my-location-btn');
     if (!navigator.geolocation) {
         showLocationStatus('Geolocation is not supported by your browser.', 'error');
         return;
     }
 
-    btn.disabled = true;
-    btn.innerText = 'Locating…';
-    showLocationStatus('', '');
-
+    // iOS Safari requires getCurrentPosition to be called synchronously
+    // inside the user gesture — no DOM work before this call.
     navigator.geolocation.getCurrentPosition(
         position => {
+            const btn = document.getElementById('use-my-location-btn');
             btn.disabled = false;
             btn.innerText = 'Use my location';
             document.getElementById('location-search-input').value = 'Current location';
             applyLocationSearch(position.coords.latitude, position.coords.longitude);
         },
         err => {
+            const btn = document.getElementById('use-my-location-btn');
             btn.disabled = false;
             btn.innerText = 'Use my location';
             const msgs = {
@@ -350,6 +350,12 @@ function useMyLocation() {
         },
         { timeout: 10000 }
     );
+
+    // Visual feedback — safe to do after getCurrentPosition is registered
+    const btn = document.getElementById('use-my-location-btn');
+    btn.disabled = true;
+    btn.innerText = 'Locating…';
+    showLocationStatus('', '');
 }
 
 function showLocationStatus(msg, type) {

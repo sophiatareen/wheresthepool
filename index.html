@@ -297,7 +297,7 @@
                     <button id="mob-overflow-btn" class="btn btn-sm btn-outline-light flex-shrink-0"
                         style="white-space:nowrap;display:none"
                         onclick="toggleMobilePillOverflow()"></button>
-                    <button class="btn btn-sm btn-outline-light flex-shrink-0 ms-1"
+                    <button class="btn btn-sm btn-outline-light flex-shrink-0"
                         onclick="document.getElementById('mob-compact-row').classList.toggle('d-none')"
                         title="Filters" style="white-space:nowrap">⚙</button>
                 </div>
@@ -2412,14 +2412,20 @@
         let _mobPillsExpanded = false;
         function toggleMobilePillOverflow() {
             _mobPillsExpanded = !_mobPillsExpanded;
-            document.querySelectorAll('#poolTypePillsMobile .mob-pill-overflow').forEach(el => {
-                el.classList.toggle('d-none', !_mobPillsExpanded);
-            });
+            const container = document.getElementById('poolTypePillsMobile');
             const btn = document.getElementById('mob-overflow-btn');
+            const overflowLabels = container.querySelectorAll('label.mob-pill-overflow');
+
             if (_mobPillsExpanded) {
-                btn.textContent = '−';
+                overflowLabels.forEach(el => el.classList.remove('d-none'));
+                container.style.flexWrap = 'wrap';
+                container.style.overflow = 'visible';
+                btn.textContent = '✕';
             } else {
-                btn.textContent = '+' + document.querySelectorAll('#poolTypePillsMobile .mob-pill-overflow').length;
+                overflowLabels.forEach(el => el.classList.add('d-none'));
+                container.style.flexWrap = 'nowrap';
+                container.style.overflow = 'hidden';
+                btn.textContent = '+' + overflowLabels.length;
             }
         }
 
