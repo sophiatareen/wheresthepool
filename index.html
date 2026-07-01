@@ -186,6 +186,46 @@
             max-width: 100%;
             max-height: 200px;
         }
+
+        /* ── Mobile header (< 768px) ───────────────────────────────── */
+        @media (max-width: 767.98px) {
+            /* 📍 pin icon overlaid on the left of the location input */
+            #location-search-wrapper {
+                position: relative;
+            }
+            #location-search-wrapper::before {
+                content: '📍';
+                position: absolute;
+                left: 11px;
+                top: 11px;
+                z-index: 10;
+                font-size: 14px;
+                pointer-events: none;
+                line-height: 1;
+            }
+            #location-search-input {
+                padding-left: 34px !important;
+            }
+            /* use-my-location shows as ◎ icon, no text */
+            #use-my-location-btn {
+                font-size: 0 !important;
+                background: transparent !important;
+                color: #6c757d !important;
+                border-color: #ced4da !important;
+                padding-left: 10px !important;
+                padding-right: 10px !important;
+                box-shadow: none !important;
+            }
+            #use-my-location-btn::after {
+                content: '◎';
+                font-size: 18px;
+                display: inline-block;
+            }
+            #clear-location-btn {
+                font-size: 12px !important;
+                padding: 0 8px !important;
+            }
+        }
     </style>
 </head>
 
@@ -204,7 +244,7 @@
             </div>
         </nav>
         <div class="header_content container my-2 px-3">
-            <div class="row mx-1 mx-md-0">
+            <div class="row mx-1 mx-md-0 d-none d-md-flex">
                 <div class="col-3 d-sm-none"></div>
                 <div class="col-7 col-sm-5 col-md-4 my-2 my-sm-1">
                     <div class="form-check form-switch">
@@ -220,39 +260,20 @@
 
                 <div
                     class="col d-flex justify-content-center justify-content-md-end text-center my-2 my-sm-0 my-lg-2 gx-0 gx-md-2 gx-lg-0">
-                    <div id="boroughChooser" class="btn-group-sm my-lg-1" role="group" aria-label="choose a borough">
-                        <input type="radio" name="borough" class="btn-check " id="borough_all" autocomplete="off"
-                            checked>
-                        <label class="btn btn-outline-light" for="borough_all">All boroughs</label>
-
-                        <input type="radio" name="borough" class="btn-check" id="borough_bronx" autocomplete="off">
-                        <label class="btn btn-outline-light" for="borough_bronx">Bronx</label>
-
-                        <input type="radio" name="borough" class="btn-check" id="borough_brooklyn" autocomplete="off">
-                        <label class="btn btn-outline-light" for="borough_brooklyn">Brooklyn</label>
-
-                        <div class="d-lg-none my-1"></div>
-
-                        <input type="radio" name="borough" class="btn-check" id="borough_manhattan" autocomplete="off">
-                        <label class="btn btn-outline-light" for="borough_manhattan">Manhattan</label>
-
-                        <input type="radio" name="borough" class="btn-check" id="borough_queens" autocomplete="off">
-                        <label class="btn btn-outline-light" for="borough_queens">Queens</label>
-
-                        <input type="radio" name="borough" class="btn-check" id="borough_staten" autocomplete="off">
-                        <label class="btn btn-outline-light" for="borough_staten">Staten Island</label>
+                    <div id="poolTypeChooser" class="btn-group-sm my-lg-1" role="group" aria-label="filter by pool type">
+                        <!-- dynamically populated by generatePoolTypePills() -->
                     </div>
                 </div>
             </div>
-            <div class="d-lg-none my-2"></div>
+            <div class="d-none d-md-block d-lg-none my-2"></div>
 
             <!-- Location search -->
-            <div class="mb-2">
+            <div class="mb-2" id="location-search-wrapper">
                 <div class="input-group">
                     <input id="location-search-input" type="text" class="form-control"
                         placeholder="Search by zip code, address, or neighborhood…"
                         autocomplete="off">
-                    <select id="radius-select" class="form-select" style="max-width:110px"
+                    <select id="radius-select" class="form-select d-none d-md-flex" style="max-width:110px"
                         onchange="if(locationFilter){ applyLocationSearch(locationFilter.lat, locationFilter.lng); }">
                         <option value="2">2 mi</option>
                         <option value="5" selected>5 mi</option>
@@ -268,12 +289,49 @@
                 <div id="location-empty-state" class="text-warning small mt-1" style="display:none"></div>
             </div>
 
-            <div class="input-group">
+            <!-- ── Mobile-only: pills with overflow + compact filter row ── -->
+            <div class="d-md-none" id="mobile-filter-section">
+                <div class="d-flex align-items-center gap-1 my-2">
+                    <div id="poolTypePillsMobile" class="btn-group-sm" role="group"
+                        style="display:flex!important;flex-wrap:nowrap;overflow:hidden;flex:1;min-width:0"></div>
+                    <button id="mob-overflow-btn" class="btn btn-sm btn-outline-light flex-shrink-0"
+                        style="white-space:nowrap;display:none"
+                        onclick="toggleMobilePillOverflow()"></button>
+                    <button class="btn btn-sm btn-outline-light flex-shrink-0 ms-1"
+                        onclick="document.getElementById('mob-compact-row').classList.toggle('d-none')"
+                        title="Filters" style="white-space:nowrap">⚙</button>
+                </div>
+                <div id="mob-compact-row" class="d-flex align-items-center flex-wrap gap-2 mb-2">
+                    <div class="form-check form-switch mb-0">
+                        <input class="form-check-input" type="checkbox" id="mob-filterOpenNow">
+                        <label class="form-check-label text-white" for="mob-filterOpenNow"
+                            style="font-size:13px">Open now</label>
+                    </div>
+                    <div class="form-check form-switch mb-0">
+                        <input class="form-check-input" type="checkbox" id="mob-filterFree">
+                        <label class="form-check-label text-white" for="mob-filterFree"
+                            style="font-size:13px">Free only</label>
+                    </div>
+                    <select id="mob-radius-select" class="form-select form-select-sm" style="max-width:82px">
+                        <option value="2">2 mi</option>
+                        <option value="5" selected>5 mi</option>
+                        <option value="10">10 mi</option>
+                        <option value="20">20 mi</option>
+                    </select>
+                    <div class="btn-group btn-group-sm ms-auto" role="group">
+                        <button id="mob-toggle-list" class="btn btn-light active" onclick="showListView()">List</button>
+                        <button id="mob-toggle-map" class="btn btn-light" onclick="showMapView()">Map</button>
+                    </div>
+                </div>
+            </div>
+            <!-- ────────────────────────────────────────────────────── -->
+
+            <div class="input-group d-none d-md-flex">
                 <input id="search_input" autofocus="autofocus" type="text" class="form-control"
                     oninput="refreshFilters()" onchange="refreshFilters()" placeholder="Search by pool name…">
             </div>
             <!-- List / Map toggle -->
-            <div class="d-flex justify-content-end mt-2 mb-1">
+            <div class="d-none d-md-flex justify-content-end mt-2 mb-1">
                 <div class="btn-group btn-group-sm" role="group">
                     <button id="toggle-list-btn" class="btn btn-light active" onclick="showListView()">List</button>
                     <button id="toggle-map-btn" class="btn btn-light" onclick="showMapView()">Map</button>
@@ -670,7 +728,8 @@
                 "latitude": 40.8246865,
                 "longitude": -73.9586938,
                 "Apple map link": "https://maps.apple.com/?daddr=40.8246865,-73.9586938",
-                "Source info": "https://parks.ny.gov/documents/parks/RiverbankAQUATICSSwimmingPoolSchedule.pdf"
+                "Source info": "https://parks.ny.gov/visit/state-parks/riverbank-state-park-denny-farrell-riverbank-state-park",
+                "Source label": "NY State Parks"
             },
             {
                 "Pool": "Douglass and DeGraw Pool",
@@ -1061,7 +1120,7 @@
                 "Borough": "Manhattan",
                 "Neighborhood": "Harlem",
                 "Cost": "Free for all",
-                "Pool Type": "Intermediate,285-ft-long pool",
+                "Pool Type": "Intermediate,Olympic Size",
                 "Outdoor or Indoor": "Outdoor",
                 "Closest subways": "2,3",
                 "Address": "110th Street & Lenox Avenue",
@@ -1930,42 +1989,18 @@
 
         document.getElementById("filterOpenNow").onchange = refreshFilters;
         document.getElementById("filterFree").onchange = refreshFilters;
-        document.getElementById("boroughChooser").onchange = refreshFilters;
+        document.getElementById("poolTypeChooser").onchange = refreshFilters;
 
         function refreshFilters() {
             onlyOpenNow = document.getElementById("filterOpenNow").checked;
             onlyFree = document.getElementById("filterFree").checked;
-            boroughChooser = document.getElementById("boroughChooser").children;
             searchTerms = document.getElementById("search_input").value.toLowerCase().trim().split(" ");
 
-
-            // for checkbox
-            // let chosenBoroughs = [];
-            // for (button of boroughChooser) {
-            //     if (button.checked) {
-            //         chosenBoroughs.push(button.id.split("_")[1]);
-            //     }
-            // }
-
-            // for radio
-            let borough;
-            for (button of boroughChooser) {
-                if (button.checked) {
-                    borough = button.id.split("_")[1];
-                    break;
-                }
-            }
+            const checkedType = document.querySelector('#poolTypeChooser input[type="radio"]:checked');
+            const selectedPoolType = checkedType ? checkedType.value : 'all';
 
             Array.from(document.getElementById("card-container").children).forEach(function (card) {
-                poolBorough = card.querySelector(".pool_borough").innerText.toLowerCase()
-                    .replace("(", "").replace(")", "").replace("staten island", "staten");
-
-                // for checkbox
-                // if ((chosenBoroughs.length != 0)
-                //     && (chosenBoroughs.length != 5)
-                //     && (chosenBoroughs.indexOf(poolBorough) == -1)) {
-                //     card.style.display = "none";
-                if ((borough != "all") && (borough != poolBorough)) {
+                if (selectedPoolType !== 'all' && !(card.dataset.poolTypes || '').split(',').includes(selectedPoolType)) {
                     card.style.display = "none";
                 } else if (onlyOpenNow && card.querySelector(".openbadge").innerText != "OPEN") {
                     card.style.display = "none";
@@ -1981,6 +2016,7 @@
                 }
             });
             if (typeof syncMapToCurrentFilters === 'function') syncMapToCurrentFilters();
+            if (typeof updateLocationResultsCount === 'function') updateLocationResultsCount();
         }
 
 
@@ -1989,6 +2025,7 @@
             let card = document.createElement('div');
             card.className = 'card text-bg-light mb-3';
             card.dataset.poolName = pool["Pool"];
+            card.dataset.poolTypes = pool["Pool Type"].split(',').map(t => t.trim() === 'Wading' ? 'Wading Pool' : t.trim()).join(',');
 
             let cardBody = document.createElement('div');
             cardBody.className = 'card-body';
@@ -2085,30 +2122,52 @@
                 h5.innerText = "Cleaning: " + handleHours(pool["Cleaning Start Time"], pool["Cleaning End Time"]);
                 hours.appendChild(h5);
             }
-            // link to website to right column
+            // link to website to right column — hidden on mobile (shown as its own row below)
             let h6 = document.createElement('div');
+            h6.className = 'd-none d-md-block';
             el = document.createElement('a');
             el.innerText = "Google Maps";
             el.href = pool["Google map link"];
             el.target = "_blank";
             h6.appendChild(el);
-            // spacer = document.createElement('span');
-            // spacer.innerText = ", ";
-            // h6.appendChild(spacer);
-            // el2 = document.createElement('a');
-            // el2.innerText = "Apple Maps";
-            // el2.href = pool["Apple map link"];
-            // el2.target = "_blank";
-            // h6.appendChild(el2);
             hours.appendChild(h6);
             row.appendChild(hours);
+
+            // mobile-only Google Maps row (appears between Hours and source link)
+            const mobileGmaps = document.createElement('div');
+            mobileGmaps.className = 'd-md-none';
+            mobileGmaps.style.cssText = 'padding: 4px 0 2px;';
+            const mobileGmapsLink = document.createElement('a');
+            mobileGmapsLink.innerText = "Google Maps";
+            mobileGmapsLink.href = pool["Google map link"];
+            mobileGmapsLink.target = "_blank";
+            mobileGmaps.appendChild(mobileGmapsLink);
 
             cardBody.appendChild(title);
 
             text.appendChild(row);
+            text.appendChild(mobileGmaps);
             cardBody.appendChild(text);
 
             card.appendChild(cardBody);
+
+            if (pool["Source info"]) {
+                const divider = document.createElement('div');
+                divider.style.cssText = 'border-top: 1px solid #dee2e6; margin: 0 1rem;';
+                const sourceFooter = document.createElement('div');
+                sourceFooter.style.cssText = 'padding: 6px 1rem 8px;';
+                const sourceLink = document.createElement('a');
+                sourceLink.href = pool["Source info"];
+                sourceLink.target = '_blank';
+                sourceLink.rel = 'noopener';
+                sourceLink.style.cssText = 'font-size: 12px; color: #6c757d; text-decoration: none;';
+                const sourceLabel = pool["Source label"] || "NYC Parks";
+                sourceLink.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:3px;vertical-align:middle"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>' + sourceLabel;
+                sourceFooter.appendChild(sourceLink);
+                card.appendChild(divider);
+                card.appendChild(sourceFooter);
+            }
+
             cardContainer.appendChild(card);
 
         }
@@ -2265,13 +2324,138 @@
         };
 
         generatePools();
+
+        function generatePoolTypePills() {
+            const typeSet = new Set();
+            pooldata.forEach(pool => {
+                pool["Pool Type"].split(',').forEach(t => {
+                    const normalized = t.trim() === 'Wading' ? 'Wading Pool' : t.trim();
+                    if (normalized) typeSet.add(normalized);
+                });
+            });
+            const ORDER = ['Olympic Size', 'Intermediate', 'Mini Pool', 'Wading Pool', 'Diving Pool'];
+            const types = [...ORDER.filter(t => typeSet.has(t)), ...Array.from(typeSet).filter(t => !ORDER.includes(t)).sort()];
+
+            const chooser = document.getElementById('poolTypeChooser');
+            chooser.innerHTML = '';
+
+            ['All', ...types].forEach((type, i) => {
+                const value = i === 0 ? 'all' : type;
+                const id = 'pooltype_' + value.replace(/\s+/g, '_').toLowerCase();
+                const input = document.createElement('input');
+                input.type = 'radio';
+                input.name = 'pooltype';
+                input.className = 'btn-check';
+                input.id = id;
+                input.value = value;
+                input.autocomplete = 'off';
+                if (i === 0) input.checked = true;
+                const label = document.createElement('label');
+                label.className = 'btn btn-outline-light';
+                label.htmlFor = id;
+                label.textContent = i === 0 ? 'All' : type;
+                chooser.appendChild(input);
+                chooser.appendChild(label);
+            });
+        }
+        generatePoolTypePills();
+
+        // ─── Mobile filter setup ──────────────────────────────────────────────────
+
+        function generateMobilePoolTypePills() {
+            const typeSet = new Set();
+            pooldata.forEach(pool => {
+                pool["Pool Type"].split(',').forEach(t => {
+                    const n = t.trim() === 'Wading' ? 'Wading Pool' : t.trim();
+                    if (n) typeSet.add(n);
+                });
+            });
+            const ORDER = ['Olympic Size', 'Intermediate', 'Mini Pool', 'Wading Pool', 'Diving Pool'];
+            const types = ['All', ...ORDER.filter(t => typeSet.has(t)), ...Array.from(typeSet).filter(t => !ORDER.includes(t)).sort()];
+            const VISIBLE = 4;
+
+            const container = document.getElementById('poolTypePillsMobile');
+            container.innerHTML = '';
+            types.forEach((type, i) => {
+                const value = i === 0 ? 'all' : type;
+                const id = 'mob_pt_' + value.replace(/\W+/g, '_').toLowerCase();
+                const inp = document.createElement('input');
+                inp.type = 'radio';
+                inp.name = 'mob-pooltype';
+                inp.className = 'btn-check';
+                inp.id = id;
+                inp.value = value;
+                inp.autocomplete = 'off';
+                if (i === 0) inp.checked = true;
+                inp.addEventListener('change', () => {
+                    const desk = document.querySelector(`#poolTypeChooser input[value="${value}"]`);
+                    if (desk) desk.checked = true;
+                    refreshFilters();
+                });
+                const lbl = document.createElement('label');
+                lbl.className = 'btn btn-outline-light btn-sm flex-shrink-0';
+                lbl.htmlFor = id;
+                lbl.textContent = type;
+                if (i >= VISIBLE) lbl.classList.add('mob-pill-overflow', 'd-none');
+                container.appendChild(inp);
+                container.appendChild(lbl);
+            });
+
+            const overflow = Math.max(0, types.length - VISIBLE);
+            const btn = document.getElementById('mob-overflow-btn');
+            if (overflow > 0) {
+                btn.textContent = '+' + overflow;
+                btn.style.display = '';
+            }
+        }
+
+        let _mobPillsExpanded = false;
+        function toggleMobilePillOverflow() {
+            _mobPillsExpanded = !_mobPillsExpanded;
+            document.querySelectorAll('#poolTypePillsMobile .mob-pill-overflow').forEach(el => {
+                el.classList.toggle('d-none', !_mobPillsExpanded);
+            });
+            const btn = document.getElementById('mob-overflow-btn');
+            if (_mobPillsExpanded) {
+                btn.textContent = '−';
+            } else {
+                btn.textContent = '+' + document.querySelectorAll('#poolTypePillsMobile .mob-pill-overflow').length;
+            }
+        }
+
+        document.getElementById('mob-filterOpenNow').addEventListener('change', function () {
+            document.getElementById('filterOpenNow').checked = this.checked;
+            refreshFilters();
+        });
+        document.getElementById('mob-filterFree').addEventListener('change', function () {
+            document.getElementById('filterFree').checked = this.checked;
+            refreshFilters();
+        });
+        document.getElementById('mob-radius-select').addEventListener('change', function () {
+            document.getElementById('radius-select').value = this.value;
+            if (typeof locationFilter !== 'undefined' && locationFilter) {
+                applyLocationSearch(locationFilter.lat, locationFilter.lng);
+            }
+        });
+
+        // Sync initial radius value (session restore may have set it)
+        document.getElementById('mob-radius-select').value = document.getElementById('radius-select').value;
+
+        // Mobile-appropriate placeholder
+        if (window.innerWidth < 768) {
+            document.getElementById('location-search-input').placeholder = 'Search by zip or address...';
+        }
+
+        generateMobilePoolTypePills();
+
         refreshFilters();
 
         function refreshWithCurrentTime() {
             console.log("Refreshing with current time...")
-            pooldata.forEach(function (pool, idx) {
-                cardContainer.children[idx].querySelector(".openbadge").replaceWith(generateOpenBadge(pool));
-                generateOpenBadge(pool)
+            pooldata.forEach(function (pool) {
+                const card = cardContainer.querySelector(`[data-pool-name="${CSS.escape(pool['Pool'])}"]`);
+                if (!card) return;
+                card.querySelector(".openbadge").replaceWith(generateOpenBadge(pool));
             });
             refreshFilters();
         }

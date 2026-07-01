@@ -108,6 +108,10 @@ function showMapView() {
     document.getElementById('map-container').style.display = '';
     document.getElementById('toggle-list-btn').classList.remove('active');
     document.getElementById('toggle-map-btn').classList.add('active');
+    const _ml = document.getElementById('mob-toggle-list');
+    const _mm = document.getElementById('mob-toggle-map');
+    if (_ml) _ml.classList.remove('active');
+    if (_mm) _mm.classList.add('active');
 
     _initMap();
 
@@ -139,4 +143,8 @@ function showListView() {
     document.getElementById('card-container').style.display = '';
     document.getElementById('toggle-list-btn').classList.add('active');
     document.getElementById('toggle-map-btn').classList.remove('active');
+    const _ml = document.getElementById('mob-toggle-list');
+    const _mm = document.getElementById('mob-toggle-map');
+    if (_ml) _ml.classList.add('active');
+    if (_mm) _mm.classList.remove('active');
 }

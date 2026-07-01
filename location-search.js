@@ -52,9 +52,24 @@ function makeDistanceElement(pool) {
     return el;
 }
 
+// ─── Live count update ────────────────────────────────────────────────────────
+
+function updateLocationResultsCount() {
+    if (!locationFilter) return;
+    const visibleCount = Array.from(
+        document.querySelectorAll('#card-container .card')
+    ).filter(card => card.style.display !== 'none').length;
+    updateEmptyState(visibleCount, locationFilter.radiusMiles);
+}
+
 // ─── Apply / clear location search ───────────────────────────────────────────
 
 function applyLocationSearch(lat, lng) {
+    const input = document.getElementById('location-search-input');
+    input.classList.remove('is-invalid');
+    const feedback = document.getElementById('location-input-feedback');
+    if (feedback) feedback.innerText = '';
+
     const radiusMiles = Number(document.getElementById('radius-select').value);
     locationFilter = { lat, lng, radiusMiles };
 
@@ -270,12 +285,16 @@ function initLocationSearch() {
 
         const val = input.value.trim();
         if (!val) return;
-        const coords = await geocodeText(val);
-        if (coords) {
-            applyLocationSearch(coords.lat, coords.lng);
-        } else {
-            showInputError('Address not found. Please try a different zip code or address.');
+
+        const res = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(val)}&key=${GOOGLE_MAPS_API_KEY}`);
+        const data = await res.json();
+        if (data.status === 'OK' && data.results[0]) {
+            const lat = data.results[0].geometry.location.lat;
+            const lng = data.results[0].geometry.location.lng;
+            applyLocationSearch(lat, lng);
+            return;
         }
+        showInputError('Address not found. Please try a different zip code or address.');
     });
 
     input.addEventListener('blur', () => {
