@@ -333,28 +333,31 @@ function useMyLocation() {
     navigator.geolocation.getCurrentPosition(
         position => {
             const btn = document.getElementById('use-my-location-btn');
-            btn.disabled = false;
-            btn.innerText = 'Use my location';
+            if (btn) { btn.disabled = false; btn.innerText = 'Use my location'; }
+            showLocationStatus('', '');
             document.getElementById('location-search-input').value = 'Current location';
-            applyLocationSearch(position.coords.latitude, position.coords.longitude);
+            try {
+                applyLocationSearch(position.coords.latitude, position.coords.longitude);
+            } catch (e) {
+                showLocationStatus('Something went wrong loading results. Please try again.', 'error');
+                console.error('[useMyLocation] applyLocationSearch threw:', e);
+            }
         },
         err => {
             const btn = document.getElementById('use-my-location-btn');
-            btn.disabled = false;
-            btn.innerText = 'Use my location';
-            const msgs = {
-                [err.PERMISSION_DENIED]: 'Location access denied. Enter an address above.',
-                [err.TIMEOUT]: 'Location timed out. Enter an address above.',
-            };
-            showLocationStatus(msgs[err.code] || 'Could not get location. Enter an address above.', 'error');
+            if (btn) { btn.disabled = false; btn.innerText = 'Use my location'; }
+            const errCode = err.code;
+            const msg = errCode === 1 ? 'Location access denied. Enable location for this site in your browser settings.'
+                      : errCode === 3 ? 'Location timed out. Enter an address above.'
+                      : 'Could not get location. Enter an address above.';
+            showLocationStatus(msg, 'error');
         },
         { timeout: 10000 }
     );
 
     // Visual feedback — safe to do after getCurrentPosition is registered
     const btn = document.getElementById('use-my-location-btn');
-    btn.disabled = true;
-    btn.innerText = 'Locating…';
+    if (btn) { btn.disabled = true; btn.innerText = 'Locating…'; }
     showLocationStatus('', '');
 }
 
