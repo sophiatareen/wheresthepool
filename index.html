@@ -39,7 +39,7 @@
 
         body {
             background-color: white;
-            background: url('images/wtp-background.jpg');
+            background: url('images/wtp-background3.png');
             background-attachment: fixed;
             background-size: cover;
             background-position: right bottom;
@@ -176,15 +176,94 @@
             box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
         }
 
+        /* OFF state track — semi-transparent white */
+        .form-switch .form-check-input {
+            background-color: rgba(255, 255, 255, 0.5);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* ON state track — solid teal */
         .form-switch .form-check-input:checked {
-            background-color: #FFD700;
-            border-color: #FFD700;
+            background-color: #0d9488;
+            border-color: #0d9488;
             border: none;
         }
 
+        /* Toggle labels — white with shadow over background */
+        .form-check-label {
+            color: #fff !important;
+            text-shadow: 1px 1px 4px rgba(0,0,0,0.8), 0px 0px 8px rgba(0,0,0,0.6);
+        }
+
+        /* Inactive pills — deep navy border + text */
+        .btn-outline-light {
+            color: #0a2e4a !important;
+            border-color: #0a2e4a !important;
+        }
+        .btn-outline-light:hover {
+            background-color: rgba(10, 46, 74, 0.1) !important;
+            color: #0a2e4a !important;
+        }
+
+        /* Active pill — deep navy fill, white text */
+        .btn-check:checked + .btn-outline-light,
+        .btn-outline-light.active {
+            background-color: #0a2e4a !important;
+            border-color: #0a2e4a !important;
+            color: #fff !important;
+        }
+
+        /* Use my location button — deep navy bg, white text */
+        #use-my-location-btn {
+            background-color: #0a2e4a !important;
+            border-color: #0a2e4a !important;
+            color: #fff !important;
+        }
+        #use-my-location-btn:hover {
+            background-color: #0d3d61 !important;
+        }
+
+        /* Clear button — match inactive pill style */
+        #clear-location-btn {
+            background-color: transparent !important;
+            color: #0a2e4a !important;
+            border-color: #0a2e4a !important;
+        }
+        #clear-location-btn:hover {
+            background-color: rgba(10, 46, 74, 0.1) !important;
+        }
+
+        .navbar { padding-top: 8px !important; }
+        .header_content {
+            margin-top: 4px !important;
+            margin-bottom: 4px !important;
+        }
+        /* Floating text over background — white with strong shadow */
+        .text-warning,
+        #location-status,
+        #location-empty-state,
+        #location-results-found {
+            color: #fff !important;
+            text-shadow: 1px 1px 4px rgba(0,0,0,0.8), 0px 0px 8px rgba(0,0,0,0.6);
+        }
         .logo {
+            filter: drop-shadow(2px 2px 8px rgba(0,0,0,0.4));
+            display: block;
+            margin: 0 auto;
+            padding: 8px 0;
             max-width: 100%;
-            max-height: 200px;
+            max-height: 160px;
+        }
+        @media (max-width: 767.98px) {
+            .logo {
+                max-height: 100px;
+                max-width: 90vw;
+            }
+        }
+
+        /* ── Mobile background position ───────────────────────────── */
+        @media (max-width: 767.98px) {
+            body { background-position: center 40% !important; }
         }
 
         /* ── Mobile header (< 768px) ───────────────────────────────── */
@@ -234,12 +313,17 @@
     <div class="all_content h-100">
         <nav class="navbar py-3 pb-0">
             <div class="container-fluid justify-content-center">
-                <span class="navbar-brand" style="font-weight:500; cursor: help"><img class="logo"
-                        src="images/wtp-logo-1.png"></span>
-                <span class="navbar-brand mx-2" data-bs-trigger="hover" data-bs-toggle="popover"
-                    data-bs-placement="bottom"
-                    data-bs-content="This site is for NYC only and was created using public data. Details are subject to change, particularly for indoor pools. Created by @sophtar and @marwahaha.">
-                    <img style="height: 20px" src="images/wtp-icon.png"></span>
+                <span class="navbar-brand" style="font-weight:500; cursor: help">
+                    <div style="position:relative; display:inline-block;">
+                        <img class="logo" src="images/wtp-logo-3.png">
+                        <span data-bs-trigger="hover" data-bs-toggle="popover"
+                            data-bs-placement="bottom"
+                            data-bs-content="This site was created using public data. Details are subject to change Created by @sophtar and @marwahaha."
+                            style="position:absolute; bottom:8px; right:-4px; line-height:1;">
+                            <img style="height: 20px" src="images/wtp-icon.png">
+                        </span>
+                    </div>
+                </span>
                 </span>
             </div>
         </nav>
@@ -249,11 +333,11 @@
                 <div class="col-7 col-sm-5 col-md-4 my-2 my-sm-1">
                     <div class="form-check form-switch">
                         <input class="form-check-input" type="checkbox" id="filterOpenNow">
-                        <label style="color:white" class="form-check-label" for="filterOpenNow">Open now</label>
+                        <label class="form-check-label" for="filterOpenNow">Open now</label>
                     </div>
                     <div class="form-check form-switch">
                         <input class="form-check-input" type="checkbox" id="filterFree">
-                        <label style="color:white" class="form-check-label" for="filterFree">Free pools only</label>
+                        <label class="form-check-label" for="filterFree">Free pools only</label>
                     </div>
                 </div>
                 <div class="col-1 d-sm-none"></div>
@@ -304,12 +388,12 @@
                 <div id="mob-compact-row" class="d-flex align-items-center flex-wrap gap-2 mb-2">
                     <div class="form-check form-switch mb-0">
                         <input class="form-check-input" type="checkbox" id="mob-filterOpenNow">
-                        <label class="form-check-label text-white" for="mob-filterOpenNow"
+                        <label class="form-check-label" for="mob-filterOpenNow"
                             style="font-size:13px">Open now</label>
                     </div>
                     <div class="form-check form-switch mb-0">
                         <input class="form-check-input" type="checkbox" id="mob-filterFree">
-                        <label class="form-check-label text-white" for="mob-filterFree"
+                        <label class="form-check-label" for="mob-filterFree"
                             style="font-size:13px">Free only</label>
                     </div>
                     <select id="mob-radius-select" class="form-select form-select-sm" style="max-width:82px">
