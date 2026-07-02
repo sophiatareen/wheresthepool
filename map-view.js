@@ -1,6 +1,88 @@
 // Map view — Leaflet + OpenStreetMap (no API key required)
 // Requires: pooldata (global), locationFilter (global from location-search.js)
 
+// ─── Polygon data ─────────────────────────────────────────────────────────────
+
+let _polygonData = null; // { poolName: { coords, type_label, also_has } }
+
+async function _loadPolygons() {
+    if (_polygonData) return;
+    try {
+        const res = await fetch('pool-polygons.json');
+        _polygonData = await res.json();
+    } catch (e) {
+        _polygonData = {};
+    }
+}
+
+function _polygonToSVG(coords, width, height) {
+    if (!coords || coords.length < 3) return '';
+
+    // coords are [lat, lng] — project to pixel space
+    const lats = coords.map(c => c[0]);
+    const lngs = coords.map(c => c[1]);
+    const minLat = Math.min(...lats), maxLat = Math.max(...lats);
+    const minLng = Math.min(...lngs), maxLng = Math.max(...lngs);
+    const dLat = maxLat - minLat || 1e-6;
+    const dLng = maxLng - minLng || 1e-6;
+
+    // Preserve aspect ratio, fit within width x height with padding
+    const pad = 4;
+    const scaleX = (width  - pad * 2) / dLng;
+    const scaleY = (height - pad * 2) / dLat;
+    const scale  = Math.min(scaleX, scaleY);
+    const offX   = pad + ((width  - pad * 2) - dLng * scale) / 2;
+    const offY   = pad + ((height - pad * 2) - dLat * scale) / 2;
+
+    const pts = coords.map(([lat, lng]) => {
+        const x = offX + (lng - minLng) * scale;
+        const y = offY + (maxLat - lat)  * scale; // flip Y
+        return `${x.toFixed(1)},${y.toFixed(1)}`;
+    }).join(' ');
+
+    return `<svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">` +
+           `<polygon points="${pts}" fill="#00bbff" fill-opacity="0.3" stroke="#0078c6" stroke-width="1.5"/>` +
+           `</svg>`;
+}
+
+function _buildPopupHTML(pool) {
+    const poly = _polygonData && _polygonData[pool['Pool']];
+
+    // ── Status badge ──────────────────────────────────────────────────────────
+    const statusText = isPoolOpen(pool);
+    const statusColor = statusText === 'OPEN' ? '#198754' : statusText === 'CLEANING' ? '#0dcaf0' : '#dc3545';
+    const badgeHTML = `<span style="display:inline-block;padding:2px 7px;border-radius:4px;font-size:0.75em;font-weight:700;color:#fff;background:${statusColor};vertical-align:middle;margin-left:6px">${statusText}</span>`;
+
+    // ── Pool size diagram ─────────────────────────────────────────────────────
+    let sizeHTML = '';
+    if (poly) {
+        const svg = _polygonToSVG(poly.coords, 120, 60);
+        const alsoNote = poly.also_has && poly.also_has.length
+            ? `<div style="font-size:0.75em;color:#6c757d;margin-top:2px">Also has: ${poly.also_has.join(', ')}</div>`
+            : '';
+        sizeHTML = `<div style="margin:8px 0 4px;text-align:center">` +
+                   svg +
+                   `<div style="font-size:0.8em;color:#444;margin-top:3px">${poly.type_label}</div>` +
+                   alsoNote +
+                   `</div>`;
+    }
+
+    // ── Distance ──────────────────────────────────────────────────────────────
+    const distHTML = pool._distanceMiles != null
+        ? `<div style="font-size:0.8em;color:#6c757d;margin-top:4px">${pool._distanceMiles.toFixed(1)} mi away</div>`
+        : '';
+
+    // ── Maps link ─────────────────────────────────────────────────────────────
+    const mapsHTML = `<div style="margin-top:6px"><a href="${pool['Google map link']}" target="_blank" rel="noopener" style="font-size:0.85em">↗ Google Maps</a></div>`;
+
+    return `<div style="min-width:130px">` +
+           `<b>${pool['Pool']}</b>${badgeHTML}` +
+           sizeHTML +
+           distHTML +
+           mapsHTML +
+           `</div>`;
+}
+
 // ─── State ────────────────────────────────────────────────────────────────────
 
 let _map = null;
@@ -54,13 +136,7 @@ function _addPoolMarkers(pools) {
     _clearPoolMarkers();
     pools.forEach(pool => {
         const marker = L.marker([pool.latitude, pool.longitude], { icon: _poolIcon });
-        const distLine = pool._distanceMiles != null
-            ? `<div style="font-size:0.8em;color:#6c757d">${pool._distanceMiles.toFixed(1)} mi away</div>`
-            : '';
-        marker.bindPopup(
-            `<b>${pool['Pool']}</b>${distLine}` +
-            `<br><a href="${pool['Google map link']}" target="_blank" rel="noopener">Google Maps</a>`
-        );
+        marker.bindPopup(() => _buildPopupHTML(pool), { maxWidth: 220 });
         marker.addTo(_map);
         _poolMarkers.push(marker);
     });
@@ -101,8 +177,9 @@ function syncMapToCurrentFilters() {
 
 // ─── Toggle: show / hide views ────────────────────────────────────────────────
 
-function showMapView() {
+async function showMapView() {
     _mapVisible = true;
+    await _loadPolygons();
 
     document.getElementById('card-container').style.display = 'none';
     document.getElementById('map-container').style.display = '';
