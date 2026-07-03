@@ -777,7 +777,7 @@
                 "Borough": "Brooklyn",
                 "Neighborhood": "Flatlands",
                 "Cost": "Free for all",
-                "Pool Type": "Mini Pool,Olympic Size",
+                "Pool Type": "Mini Pool",
                 "Outdoor or Indoor": "Outdoor",
                 "Closest subways": "2,5",
                 "Address": "E. 54th Street & Avenue H",
@@ -2212,6 +2212,13 @@
                 let h2 = document.createElement('div');
                 h2.innerText = pool["Weekday Open Time"] + " 😔";
                 hours.appendChild(h2);
+            } else if (_isHeatwaveActive() && _isHeatwavePool(pool)) {
+                let h2 = document.createElement('div');
+                h2.innerText = "Heat wave hours 🥵: 11am–8:30pm";
+                hours.appendChild(h2);
+                let h5 = document.createElement('div');
+                h5.innerText = "Cleaning: " + handleHours(pool["Cleaning Start Time"], pool["Cleaning End Time"]);
+                hours.appendChild(h5);
             } else {
                 weekdayHours = handleHours(pool["Weekday Open Time"], pool["Weekday Close Time"]);
                 saturdayHours = handleHours(pool["Saturday Open Time"], pool["Saturday Close Time"]);
@@ -2383,6 +2390,21 @@
             return (+t1.split(":")[0] * 100 + (+t1.split(":")[1])) < (+t2.split(":")[0] * 100 + (+t2.split(":")[1]));
         }
 
+        // Heatwave hours: July 3–4 2026 only, outdoor Olympic/Intermediate NYC Parks pools
+        function _isHeatwaveActive() {
+            const now = new Date();
+            const y = now.getFullYear(), m = now.getMonth(), d = now.getDate();
+            return y === 2026 && m === 6 && (d === 3 || d === 4); // month is 0-indexed
+        }
+
+        function _isHeatwavePool(pool) {
+            const types = pool["Pool Type"].split(',').map(t => t.trim());
+            const hasType = types.some(t => t === 'Olympic Size' || t === 'Intermediate');
+            const isOutdoor = pool["Outdoor or Indoor"] === "Outdoor";
+            const isNYCParks = (pool["Source info"] || "").includes("nycgovparks.org");
+            return hasType && isOutdoor && isNYCParks;
+        }
+
         function isPoolOpen(pool) {
             dateObj = new Date();
 
@@ -2405,6 +2427,11 @@
             closeTime = pool[day + " Close Time"];
             cleanStart = pool["Cleaning Start Time"];
             cleanEnd = pool["Cleaning End Time"];
+
+            // Heatwave: extend close time to 20:30
+            if (_isHeatwaveActive() && _isHeatwavePool(pool) && !poolClosedAllDay(openTime)) {
+                closeTime = "20:30";
+            }
 
             // closed all day?
             if (poolClosedAllDay(openTime)) {

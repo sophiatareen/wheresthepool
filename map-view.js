@@ -53,6 +53,26 @@ function _buildPopupHTML(pool) {
     const statusColor = statusText === 'OPEN' ? '#198754' : statusText === 'CLEANING' ? '#0dcaf0' : '#dc3545';
     const badgeHTML = `<span style="display:inline-block;padding:2px 7px;border-radius:4px;font-size:0.75em;font-weight:700;color:#fff;background:${statusColor};vertical-align:middle;margin-left:6px">${statusText}</span>`;
 
+    // ── Hours ─────────────────────────────────────────────────────────────────
+    let hoursHTML = '';
+    if (poolClosedAllDay(pool['Weekday Open Time'])) {
+        hoursHTML = `<div style="font-size:0.8em;color:#444;margin-top:4px">${pool['Weekday Open Time']}</div>`;
+    } else if (_isHeatwaveActive() && _isHeatwavePool(pool)) {
+        const cleanLine = `Cleaning: ${handleHours(pool['Cleaning Start Time'], pool['Cleaning End Time'])}`;
+        hoursHTML = `<div style="font-size:0.8em;color:#444;margin-top:4px">Heat wave hours 🥵: 11am–8:30pm</div>` +
+                    `<div style="font-size:0.78em;color:#6c757d">${cleanLine}</div>`;
+    } else {
+        const wkHours = handleHours(pool['Weekday Open Time'], pool['Weekday Close Time']);
+        const saHours = handleHours(pool['Saturday Open Time'], pool['Saturday Close Time']);
+        const suHours = handleHours(pool['Sunday Open Time'], pool['Sunday Close Time']);
+        const hoursLine = (wkHours === saHours && saHours === suHours)
+            ? `Daily: ${wkHours}`
+            : `Wkdy: ${wkHours} · Sat: ${saHours} · Sun: ${suHours}`;
+        const cleanLine = `Cleaning: ${handleHours(pool['Cleaning Start Time'], pool['Cleaning End Time'])}`;
+        hoursHTML = `<div style="font-size:0.8em;color:#444;margin-top:4px">${hoursLine}</div>` +
+                    `<div style="font-size:0.78em;color:#6c757d">${cleanLine}</div>`;
+    }
+
     // ── Pool size diagram ─────────────────────────────────────────────────────
     let sizeHTML = '';
     if (poly) {
@@ -77,6 +97,7 @@ function _buildPopupHTML(pool) {
 
     return `<div style="min-width:130px">` +
            `<b>${pool['Pool']}</b>${badgeHTML}` +
+           hoursHTML +
            sizeHTML +
            distHTML +
            mapsHTML +
