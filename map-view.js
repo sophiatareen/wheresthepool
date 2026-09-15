@@ -55,7 +55,9 @@ function _buildPopupHTML(pool) {
 
     // ── Hours ─────────────────────────────────────────────────────────────────
     let hoursHTML = '';
-    if (poolClosedAllDay(pool['Weekday Open Time'])) {
+    if (_isOffSeason() && _isOutdoorPool(pool)) {
+        hoursHTML = `<div style="font-size:0.8em;color:#444;margin-top:4px">🛟 Closed for the season</div>`;
+    } else if (poolClosedAllDay(pool['Weekday Open Time'])) {
         hoursHTML = `<div style="font-size:0.8em;color:#444;margin-top:4px">${pool['Weekday Open Time']}</div>`;
     } else if (_isHeatwaveActive() && _isHeatwavePool(pool)) {
         const cleanLine = `Cleaning: ${handleHours(pool['Cleaning Start Time'], pool['Cleaning End Time'])}`;

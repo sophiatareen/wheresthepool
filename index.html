@@ -2208,7 +2208,11 @@
 
             hours.appendChild(h1);
             // don't show all this info if pool is closed all summere
-            if (pool["Weekday Open Time"].toLowerCase().indexOf("closed") != -1) {
+            if (_isOffSeason() && _isOutdoorPool(pool)) {
+                let h2 = document.createElement('div');
+                h2.innerText = "🛟 Closed for the season";
+                hours.appendChild(h2);
+            } else if (pool["Weekday Open Time"].toLowerCase().indexOf("closed") != -1) {
                 let h2 = document.createElement('div');
                 h2.innerText = pool["Weekday Open Time"] + " 😔";
                 hours.appendChild(h2);
@@ -2390,6 +2394,16 @@
             return (+t1.split(":")[0] * 100 + (+t1.split(":")[1])) < (+t2.split(":")[0] * 100 + (+t2.split(":")[1]));
         }
 
+        // Off-season: all outdoor pools closed until June 27 2027
+        function _isOffSeason() {
+            const now = new Date();
+            return now < new Date(2027, 5, 27); // month is 0-indexed; June 27 2027 00:00
+        }
+
+        function _isOutdoorPool(pool) {
+            return pool["Outdoor or Indoor"] === "Outdoor";
+        }
+
         // Heatwave hours: July 3–4 2026 only, outdoor Olympic/Intermediate NYC Parks pools
         function _isHeatwaveActive() {
             const now = new Date();
@@ -2406,6 +2420,8 @@
         }
 
         function isPoolOpen(pool) {
+            if (_isOffSeason() && _isOutdoorPool(pool)) return "CLOSED";
+
             dateObj = new Date();
 
             // for testing
